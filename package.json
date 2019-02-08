@@ -1,0 +1,18 @@
+{
+  "name": "iberian-magpie-slide-cache",
+  "version": "1.0.0",
+  "description": "Prototype cache system for sliding window lookup operations",
+  "main": "index.js",
+  "repository": "https://github.com/spacekitcat/iberian-magpie-slide-cache",
+  "author": "Lisa Burton",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.3.1",
+    "babel-jest": "^24.0.0",
+    "jest": "^24.0.0"
+  },
+  "scripts": {
+    "test": "jest --coverage"
+  }
+}
