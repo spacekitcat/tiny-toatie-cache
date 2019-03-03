@@ -7,11 +7,22 @@ class Cache {
   }
 
   append(list) {
-    this.internalCache.append(list)
+    this.internalCache.append(list);
   }
 
   getReadOnlyBuffer() {
     return this.internalCache.getReadOnlyBuffer();
+  }
+
+  put() {
+  }
+
+  read() {
+    return {
+      value: Buffer.from([0x26]),
+      offset: 2,
+      length: 1
+    };
   }
 }
 
