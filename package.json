@@ -1,6 +1,6 @@
 {
   "name": "iberian-magpie-slide-cache",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Prototype cache system for sliding window lookup operations",
   "main": "index.js",
   "repository": "https://github.com/spacekitcat/iberian-magpie-slide-cache",
@@ -14,5 +14,8 @@
   },
   "scripts": {
     "test": "jest --coverage"
+  },
+  "dependencies": {
+    "cloakroom-smart-buffer-proxy": "^2.0.6"
   }
 }
