@@ -4,6 +4,7 @@ class Cache {
   constructor() {
     this.offset = 0;
     this.internalCache = new Proxy();
+    this.store = [];
   }
 
   append(list) {
@@ -14,15 +15,18 @@ class Cache {
     return this.internalCache.getReadOnlyBuffer();
   }
 
-  put() {
+  put(key, offset) {
+    const ticket = this.internalCache.createTicket(offset);
+    console.log(key.toString());
+    this.store[key.toString()] = ticket;
   }
 
-  read() {
-    return {
-      value: Buffer.from([0x26]),
-      offset: 2,
-      length: 1
-    };
+  read(key) {
+    console.log(key.toString());
+    console.log(this.internalCache.resolveTicket(this.store[key.toString()]));
+    const res = this.internalCache.resolveTicket(this.store[key.toString()]);
+
+    return { "offset": res.offset, "value": Buffer.from( [ res.value ] ), length: 1 };
   }
 }
 
