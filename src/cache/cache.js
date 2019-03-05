@@ -28,6 +28,7 @@ class Cache {
 
     const res = this.internalCache.resolveTicket(cacheed);
     if (!res) {
+      delete this.store[key.toString()];
       return null;
     }
 
@@ -37,6 +38,10 @@ class Cache {
     value = buffer.slice(from, res.length);
 
     return { offset: res.offset, value: value, length: key.length };
+  }
+
+  getCacheSize() {
+    return Object.entries(this.store).length;
   }
 }
 

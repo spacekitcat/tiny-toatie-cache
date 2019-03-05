@@ -6,6 +6,7 @@ describe('The `Cache` class', () => {
     const expectedAppendList = [0x45, 0x44, 0x46];
     sut.append(Buffer.from(expectedAppendList));
     expect(sut.getReadOnlyBuffer()).toMatchObject(expectedAppendList);
+    expect(sut.getCacheSize()).toBe(0);
   });
 
   it('append method (alt)', () => {
@@ -13,6 +14,7 @@ describe('The `Cache` class', () => {
     const expectedAppendList = [0x75, 0x64, 0x26];
     sut.append(Buffer.from(expectedAppendList));
     expect(sut.getReadOnlyBuffer()).toMatchObject(expectedAppendList);
+    expect(sut.getCacheSize()).toBe(0);
   });
 
   describe('An existing single-byte key is put and retrieved', () => {
@@ -29,6 +31,7 @@ describe('The `Cache` class', () => {
         offset: 3,
         length: 1
       });
+      expect(sut.getCacheSize()).toBe(1);
     });
 
     it('puts and retrieves as expected (alt)', () => {
@@ -44,6 +47,7 @@ describe('The `Cache` class', () => {
         offset: 1,
         length: 1
       });
+      expect(sut.getCacheSize()).toBe(1);
     });
   });
 
@@ -61,6 +65,7 @@ describe('The `Cache` class', () => {
         offset: 3,
         length: 2
       });
+      expect(sut.getCacheSize()).toBe(1);
     });
 
     it('puts and retrieves as expected (alt)', () => {
@@ -76,10 +81,11 @@ describe('The `Cache` class', () => {
         offset: 1,
         length: 2
       });
+      expect(sut.getCacheSize()).toBe(1);
     });
   });
 
-  describe('An non-existant key is specified', () => {
+  describe('An non-existant key is specified (cache-miss)', () => {
     it('returns null', () => {
       const sut = new Cache();
       const key = Buffer.from([0xFF, 0xFF]);
@@ -87,10 +93,11 @@ describe('The `Cache` class', () => {
       sut.append(Buffer.from(expectedAppendList));
 
       expect(sut.read(key)).toBe(null);
+      expect(sut.getCacheSize()).toBe(0);
     });
   });
 
-  describe('An expired key is specified', () => {
+  describe('An expired key is specified (cache-expiry)', () => {
     it('returns null', () => {
       const sut = new Cache(6);
       const key = Buffer.from([0x64]);
@@ -99,6 +106,7 @@ describe('The `Cache` class', () => {
       sut.append(Buffer.from([0x23, 0x33, 0x44, 0x55, 0x66, 0x77]));
 
       expect(sut.read(key)).toBe(null);
+      expect(sut.getCacheSize()).toBe(0);
     });
   });
 });
