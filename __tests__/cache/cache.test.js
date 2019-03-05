@@ -22,7 +22,6 @@ describe('The `Cache` class', () => {
       const expectedAppendList = [0x75, 0x64, 0x26, 0x44, 0x83, 0xff];
       sut.append(Buffer.from(expectedAppendList));
 
-      sut.getReadOnlyBuffer();
       sut.put(key, 3);
 
       expect(sut.read(key)).toMatchObject({
@@ -38,7 +37,6 @@ describe('The `Cache` class', () => {
       const expectedAppendList = [0x15, 0x24, 0x36, 0x14, 0x23, 0x5f];
       sut.append(Buffer.from(expectedAppendList));
 
-      sut.getReadOnlyBuffer();
       sut.put(key, 1);
 
       expect(sut.read(key)).toMatchObject({
@@ -56,7 +54,6 @@ describe('The `Cache` class', () => {
       const expectedAppendList = [0x75, 0x64, 0x26, 0x44, 0x83, 0xff];
       sut.append(Buffer.from(expectedAppendList));
 
-      sut.getReadOnlyBuffer();
       sut.put(key, 3);
 
       expect(sut.read(key)).toMatchObject({
@@ -72,7 +69,6 @@ describe('The `Cache` class', () => {
       const expectedAppendList = [0x15, 0x24, 0x36, 0x14, 0x23, 0x5f];
       sut.append(Buffer.from(expectedAppendList));
 
-      sut.getReadOnlyBuffer();
       sut.put(key, 1);
 
       expect(sut.read(key)).toMatchObject({
@@ -80,6 +76,29 @@ describe('The `Cache` class', () => {
         offset: 1,
         length: 2
       });
+    });
+  });
+
+  describe('An non-existant key is specified', () => {
+    it('returns null', () => {
+      const sut = new Cache();
+      const key = Buffer.from([0xFF, 0xFF]);
+      const expectedAppendList = [0x75, 0x64, 0x26, 0x44, 0x83, 0xff];
+      sut.append(Buffer.from(expectedAppendList));
+
+      expect(sut.read(key)).toBe(null);
+    });
+  });
+
+  describe('An expired key is specified', () => {
+    it('returns null', () => {
+      const sut = new Cache(6);
+      const key = Buffer.from([0x05]);
+      sut.append(Buffer.from([0x01, 0x02, 0x03, 0x04, 0x05, 0x06]));
+      sut.put(key, 1);
+      sut.append(Buffer.from([0x23, 0x33, 0x44, 0x55, 0x66, 0x77]));
+
+      expect(sut.read(key)).toBe(null);
     });
   });
 });

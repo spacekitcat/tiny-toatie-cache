@@ -1,9 +1,9 @@
 import { Proxy } from 'cloakroom-smart-buffer-proxy';
 
 class Cache {
-  constructor() {
+  constructor(size = 32000) {
     this.offset = 0;
-    this.internalCache = new Proxy();
+    this.internalCache = new Proxy(size);
     this.store = [];
   }
 
@@ -21,14 +21,22 @@ class Cache {
   }
 
   read(key) {
-    const res = this.internalCache.resolveTicket(this.store[key.toString()]);
+    const cacheed = this.store[key.toString()];
+    if (!cacheed) {
+      return null;
+    }
+
+    const res = this.internalCache.resolveTicket(cacheed);
+    if (!res) {
+      return null;
+    }
 
     const buffer = this.getReadOnlyBuffer();
     let value;
     const from = buffer.length - res.offset - 1;
     value = buffer.slice(from, res.length);
 
-    return { "offset": res.offset, "value": value, length: key.length };
+    return { offset: res.offset, value: value, length: key.length };
   }
 }
 
