@@ -17,16 +17,18 @@ class Cache {
 
   put(key, offset) {
     const ticket = this.internalCache.createTicket(offset);
-    console.log(key.toString());
     this.store[key.toString()] = ticket;
   }
 
   read(key) {
-    console.log(key.toString());
-    console.log(this.internalCache.resolveTicket(this.store[key.toString()]));
     const res = this.internalCache.resolveTicket(this.store[key.toString()]);
 
-    return { "offset": res.offset, "value": Buffer.from( [ res.value ] ), length: 1 };
+    const buffer = this.getReadOnlyBuffer();
+    let value;
+    const from = buffer.length - res.offset - 1;
+    value = buffer.slice(from, res.length);
+
+    return { "offset": res.offset, "value": value, length: key.length };
   }
 }
 
