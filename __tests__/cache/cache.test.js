@@ -93,7 +93,7 @@ describe('The `Cache` class', () => {
   describe('An expired key is specified', () => {
     it('returns null', () => {
       const sut = new Cache(6);
-      const key = Buffer.from([0x05]);
+      const key = Buffer.from([0x64]);
       sut.append(Buffer.from([0x01, 0x02, 0x03, 0x04, 0x05, 0x06]));
       sut.put(key, 1);
       sut.append(Buffer.from([0x23, 0x33, 0x44, 0x55, 0x66, 0x77]));
