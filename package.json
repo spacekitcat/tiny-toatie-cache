@@ -1,9 +1,9 @@
 {
-  "name": "iberian-magpie-slide-cache",
+  "name": "tiny-toatie-cache",
   "version": "0.0.1",
   "description": "Prototype cache system for sliding window lookup operations",
   "main": "index.js",
-  "repository": "https://github.com/spacekitcat/iberian-magpie-slide-cache",
+  "repository": "https://github.com/spacekitcat/tiny-toatie-cache",
   "author": "Lisa Burton",
   "license": "MIT",
   "devDependencies": {

@@ -1,4 +1,4 @@
-# iberian-magpie-slice-cache-prototype
+# tiny-toatie-cache
 
 ## What the heck is this?
 A protype cache system for fast text lookups against a dynamic, scoped view of a larger dataset. 
