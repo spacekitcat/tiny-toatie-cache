@@ -1,5 +1,7 @@
 # tiny-toatie-cache
 
+** This project is a work in progress. It might not be very useful to anyone in this state. **/
+
 ## What the heck is this?
 A protype cache system for fast text lookups against a dynamic, scoped view of a larger dataset. 
 I want to experiment to see if a cache could be smart enough to have in impact on the prefix lookup
