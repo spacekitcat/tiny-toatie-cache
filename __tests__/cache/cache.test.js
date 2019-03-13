@@ -49,6 +49,25 @@ describe('The `Cache` class', () => {
       });
       expect(sut.getCacheSize()).toBe(1);
     });
+
+    it('calls the on `hit` handler', () => {
+      const sut = new Cache();
+      const key = Buffer.from([0x26]);
+      const expectedAppendList = [0x75, 0x64, 0x26, 0x44, 0x83, 0xff];
+      sut.append(Buffer.from(expectedAppendList));
+
+      const hitMock = jest.fn();
+      sut.on('hit', hitMock);
+      sut.put(key, 3);
+
+      expect(sut.read(key)).toMatchObject({
+        value: key,
+        offset: 3,
+        length: 1
+      });
+      expect(sut.getCacheSize()).toBe(1);
+      expect(hitMock).toHaveBeenCalledWith(key.toString());
+    });
   });
 
   describe('An existing multi-byte key is put and retrieved', () => {

@@ -32,6 +32,10 @@ class Cache {
       return null;
     }
 
+    if (this.hitHandler) {
+      this.hitHandler(key.toString());
+    }
+
     const buffer = this.getReadOnlyBuffer();
     let value;
     const from = buffer.length - res.offset - 1;
@@ -42,6 +46,12 @@ class Cache {
 
   getCacheSize() {
     return Object.entries(this.store).length;
+  }
+
+  on(eventKey, handler) {
+    if (eventKey === 'hit') {
+      this.hitHandler = handler;
+    }
   }
 }
 
