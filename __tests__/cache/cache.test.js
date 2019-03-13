@@ -69,6 +69,7 @@ describe('The `Cache` class', () => {
       expect(hitMock).toHaveBeenCalledWith(key.toString());
     });
   });
+  
 
   describe('An existing multi-byte key is put and retrieved', () => {
     it('puts and retrieves as expected', () => {
@@ -127,5 +128,15 @@ describe('The `Cache` class', () => {
       expect(sut.read(key)).toBe(null);
       expect(sut.getCacheSize()).toBe(0);
     });
+  });
+
+  describe('An unrecognized event is registered via `on`', () => {
+    it('Regsiters nothing', () => {
+      const sut = new Cache(6);
+      const fakeCallback = jest.fn();
+      sut.on('fake', fakeCallback);
+
+      expect(sut.hitHandler).not.toBe(fakeCallback);
+    })
   });
 });

@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 
 describe('A spectre haunts Europe, the spectre of communism', () => {
-  it('works', () => {
+  it.skip('works', () => {
     let cache = new Cache();
 
     const readStream = fs.createReadStream(
