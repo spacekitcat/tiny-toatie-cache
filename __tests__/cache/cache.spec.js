@@ -9,7 +9,7 @@ describe('The `Cache` class', () => {
     });
 
     describe('the constructor is called with a valid store object', () => {
-        it('construct and set the internal store', () => {
+        it('should construct and set the internal store', () => {
             const store = new Store();
             const cache = new Cache(store);
 

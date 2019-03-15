@@ -18,7 +18,7 @@ describe('The `Store` class', () => {
   });
 
   describe('An existing single-byte key is put and retrieved', () => {
-    it('puts and retrieves as expected', () => {
+    it('should put and retrieve as expected', () => {
       const sut = new Store();
       const key = Buffer.from([0x26]);
       const expectedAppendList = [0x75, 0x64, 0x26, 0x44, 0x83, 0xff];
@@ -34,7 +34,7 @@ describe('The `Store` class', () => {
       expect(sut.getStoreSize()).toBe(1);
     });
 
-    it('puts and retrieves as expected (alt)', () => {
+    it('should put and retrieve as expected (alt)', () => {
       const sut = new Store();
       const key = Buffer.from([0x23]);
       const expectedAppendList = [0x15, 0x24, 0x36, 0x14, 0x23, 0x5f];
@@ -50,7 +50,7 @@ describe('The `Store` class', () => {
       expect(sut.getStoreSize()).toBe(1);
     });
 
-    it('calls the on `hit` handler', () => {
+    it('should call the on `hit` handler', () => {
       const sut = new Store();
       const key = Buffer.from([0x26]);
       const expectedAppendList = [0x75, 0x64, 0x26, 0x44, 0x83, 0xff];
@@ -72,7 +72,7 @@ describe('The `Store` class', () => {
   
 
   describe('An existing multi-byte key is put and retrieved', () => {
-    it('puts and retrieves as expected', () => {
+    it('should put and retrieve as expected', () => {
       const sut = new Store();
       const key = Buffer.from([0x26, 0x44]);
       const expectedAppendList = [0x75, 0x64, 0x26, 0x44, 0x83, 0xff];
@@ -88,7 +88,7 @@ describe('The `Store` class', () => {
       expect(sut.getStoreSize()).toBe(1);
     });
 
-    it('puts and retrieves as expected (alt)', () => {
+    it('should put and retrieve as expected (alt)', () => {
       const sut = new Store();
       const key = Buffer.from([0x23, 0x5f]);
       const expectedAppendList = [0x15, 0x24, 0x36, 0x14, 0x23, 0x5f];
@@ -105,8 +105,8 @@ describe('The `Store` class', () => {
     });
   });
 
-  describe('An non-existant key is specified (Store-miss)', () => {
-    it('returns null', () => {
+  describe('An non-existant key is specified (store-miss)', () => {
+    it('should returns `null`', () => {
       const sut = new Store();
       const key = Buffer.from([0xFF, 0xFF]);
       const expectedAppendList = [0x75, 0x64, 0x26, 0x44, 0x83, 0xff];
@@ -117,8 +117,8 @@ describe('The `Store` class', () => {
     });
   });
 
-  describe('An expired key is specified (Store-expiry)', () => {
-    it('returns null', () => {
+  describe('An expired key is specified (store-expiry)', () => {
+    it('shoud return `null`', () => {
       const sut = new Store(6);
       const key = Buffer.from([0x64]);
       sut.append(Buffer.from([0x01, 0x02, 0x03, 0x04, 0x05, 0x06]));
@@ -131,7 +131,7 @@ describe('The `Store` class', () => {
   });
 
   describe('An unrecognized event is registered via `on`', () => {
-    it('Regsiters nothing', () => {
+    it('should regsiter nothing', () => {
       const sut = new Store(6);
       const fakeCallback = jest.fn();
       sut.on('fake', fakeCallback);
