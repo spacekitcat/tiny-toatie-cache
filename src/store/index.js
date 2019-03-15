@@ -1,32 +1,32 @@
 import { Proxy } from 'cloakroom-smart-buffer-proxy';
 
-class Cache {
+class Store {
   constructor(size = 32000) {
     this.offset = 0;
-    this.internalCache = new Proxy(size);
+    this.internalStore = new Proxy(size);
     this.store = [];
   }
 
   append(list) {
-    this.internalCache.append(list);
+    this.internalStore.append(list);
   }
 
   getReadOnlyBuffer() {
-    return this.internalCache.getReadOnlyBuffer();
+    return this.internalStore.getReadOnlyBuffer();
   }
 
   put(key, offset) {
-    const ticket = this.internalCache.createTicket(offset);
+    const ticket = this.internalStore.createTicket(offset);
     this.store[key.toString()] = ticket;
   }
 
   read(key) {
-    const cacheed = this.store[key.toString()];
-    if (!cacheed) {
+    const cacheHit = this.store[key.toString()];
+    if (!cacheHit) {
       return null;
     }
 
-    const res = this.internalCache.resolveTicket(cacheed);
+    const res = this.internalStore.resolveTicket(cacheHit);
     if (!res) {
       delete this.store[key.toString()];
       return null;
@@ -44,7 +44,7 @@ class Cache {
     return { offset: res.offset, value: value, length: key.length };
   }
 
-  getCacheSize() {
+  getStoreSize() {
     return Object.entries(this.store).length;
   }
 
@@ -55,4 +55,4 @@ class Cache {
   }
 }
 
-export default Cache;
+export default Store;
