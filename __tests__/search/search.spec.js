@@ -1,4 +1,4 @@
-import search from '../../src/search/search';
+import search from '../../src/search';
 
 describe('The `search` method', () => {
   describe('when the dictionary is `null`', () => {
