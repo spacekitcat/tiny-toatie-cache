@@ -1,4 +1,7 @@
 export default (dictionary, searchItem) => {
+    if (!dictionary) {
+        throw new Error('incorrect dictionary type: expected a Buffer instance instead of `null`')
+    }
     if (dictionary.length === 0 || searchItem.length === 0) {
         return null;
     }
