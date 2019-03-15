@@ -6,8 +6,10 @@ export default (dictionary, searchItem) => {
         return null;
     }
 
-    if (dictionary[0] === searchItem[0]) {
-        return { offset: 0, length: 1 }
+    const indexOf = dictionary.indexOf(searchItem)
+    if (indexOf >= 0) {
+        const invertedIndex = (dictionary.length - 1) - indexOf;
+        return { offset: invertedIndex, length: searchItem.length }
     }
 
     return null;
