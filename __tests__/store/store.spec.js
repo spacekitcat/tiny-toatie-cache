@@ -105,6 +105,23 @@ describe('The `Store` class', () => {
     });
   });
 
+  describe('A key `length` which check that an object, not an array, is the underlying store', () => {
+    it('should put and retrieve as expected', () => {
+      const sut = new Store();
+      const key = Buffer.from([0x6c, 0x65, 0x6E, 0x67, 0x74, 0x68]);
+      sut.append(key);
+
+      sut.put(key, 5);
+      
+      expect(sut.read(key)).toMatchObject({
+        value: key,
+        offset: 5,
+        length: 6
+      });
+      expect(sut.getStoreSize()).toBe(1);
+    });
+  });
+
   describe('An non-existant key is specified (store-miss)', () => {
     it('should returns `null`', () => {
       const sut = new Store();

@@ -4,7 +4,7 @@ class Store {
   constructor(size = 32000) {
     this.offset = 0;
     this.internalStore = new Proxy(size);
-    this.store = [];
+    this.store = {};
   }
 
   append(list) {
