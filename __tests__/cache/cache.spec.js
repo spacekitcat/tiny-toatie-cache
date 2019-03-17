@@ -25,7 +25,7 @@ describe('The `Cache` class', () => {
 
             cache.append(expectedAppendData);
 
-            expect(cache.getInternalStore().getReadOnlyBuffer()).toMatchObject(expectedAppendData)
+            expect(cache.getInternalStore().getReadOnlyBuffer()).toMatchObject(expectedAppendData);
         });
     });
 
@@ -40,6 +40,15 @@ describe('The `Cache` class', () => {
             cache.append(expectedAppendDataTwo);
 
             expect(cache.getInternalStore().getReadOnlyBuffer()).toMatchObject(Buffer.concat([expectedAppendDataOne, expectedAppendDataTwo]));
+        });
+    });
+
+    describe('the find method is ran with an empty store', () => {
+        it('should return null', () => {
+            const store = new Store();
+            const cache = new Cache(store);
+
+            expect(cache.find(Buffer.from([0x44]))).toBe(null);
         });
     });
 });
