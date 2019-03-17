@@ -16,4 +16,16 @@ describe('The `Cache` class', () => {
             expect(cache.getInternalStore()).toBe(store);
         });
     });
+
+    describe('data is appended to the cache', () => {
+        it('should push the new data to the front of the byte stack', () => {
+            const expectedInternalBuffer = Buffer.from([0x66]);
+            const store = new Store();
+            const cache = new Cache(store);
+
+            cache.append(expectedInternalBuffer);
+
+            expect(cache.getInternalStore().getReadOnlyBuffer()).toMatchObject(expectedInternalBuffer)
+        });
+    });
 });

@@ -7,6 +7,10 @@ class Cache {
         this.store = store;
     }
 
+    append(list) {
+        this.store.append(list);
+    }
+
     getInternalStore() {
         return this.store;
     }
