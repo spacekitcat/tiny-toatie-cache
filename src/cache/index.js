@@ -1,3 +1,5 @@
+import search from '../../src/search';
+
 class Cache {
     constructor(store) {
         if (!store) {
@@ -11,8 +13,8 @@ class Cache {
         this.store.append(list);
     }
 
-    find() {
-        return null;
+    find(target) {
+        return search(Buffer.from(this.store.getReadOnlyBuffer()), target);
     }
 
     getInternalStore() {
