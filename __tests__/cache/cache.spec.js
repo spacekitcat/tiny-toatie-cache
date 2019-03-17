@@ -58,14 +58,16 @@ describe('The `Cache` class', () => {
   });
 
   describe('the find method is ran with a single element store', () => {
+    const dictionary = Buffer.from([0x55]);
+
     describe('and the search term does not exist (too long in any case)', () => {
       it('should return null', () => {
         const store = new Store();
         const cache = new Cache(store);
 
-        cache.append(Buffer.from([0x54, 0x55]));
+        cache.append(dictionary);
 
-        expect(cache.find(Buffer.from([0x44]))).toBe(null);
+        expect(cache.find(Buffer.from([0x44, 0x67]))).toBe(null);
       });
     });
 
@@ -74,24 +76,45 @@ describe('The `Cache` class', () => {
         const store = new Store();
         const cache = new Cache(store);
 
-        cache.append(Buffer.from([0x54]));
+        cache.append(dictionary);
 
         expect(cache.find(Buffer.from([0x44]))).toBe(null);
       });
     });
 
     describe('and the search term does exist', () => {
-      it('should return the offset', () => {
+      it('should create a cache entry and then return expected offset', () => {
+        const expectedSearchTerm = Buffer.from([0x54]);
+        const store = new Store();
+        store.put = jest.fn();
+        const cache = new Cache(store);
+
+        cache.append(expectedSearchTerm);
+
+        expect(cache.find(expectedSearchTerm)).toMatchObject(
+          search(expectedSearchTerm, expectedSearchTerm)
+        );
+        expect(store.put).toHaveBeenCalled();
+      });
+    });
+
+    describe('and the search term is cached (double lookup)', () => {
+      it('should hit the cache and return the offset', () => {
         const expectedSearchTerm = Buffer.from([0x54]);
         const store = new Store();
         const cache = new Cache(store);
 
         cache.append(expectedSearchTerm);
 
-          expect(cache.find(expectedSearchTerm)).toMatchObject(
-            search(expectedSearchTerm, expectedSearchTerm)
-          );
+        cache.find(expectedSearchTerm);
+        expect(cache.find(expectedSearchTerm)).toMatchObject(
+          search(expectedSearchTerm, expectedSearchTerm)
+        );
+
+        // Incomplete.
       });
     });
   });
+
+  describe('the find method is ran with a two element store', () => {});
 });
