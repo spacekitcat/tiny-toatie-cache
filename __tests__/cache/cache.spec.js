@@ -19,13 +19,27 @@ describe('The `Cache` class', () => {
 
     describe('data is appended to the cache', () => {
         it('should push the new data to the front of the byte stack', () => {
-            const expectedInternalBuffer = Buffer.from([0x66]);
+            const expectedAppendData = Buffer.from([0x66]);
             const store = new Store();
             const cache = new Cache(store);
 
-            cache.append(expectedInternalBuffer);
+            cache.append(expectedAppendData);
 
-            expect(cache.getInternalStore().getReadOnlyBuffer()).toMatchObject(expectedInternalBuffer)
+            expect(cache.getInternalStore().getReadOnlyBuffer()).toMatchObject(expectedAppendData)
+        });
+    });
+
+    describe('data is appended to the cache twice', () => {
+        it('should push the new data to the front of the byte stack', () => {
+            const expectedAppendDataOne = Buffer.from([0x66]);
+            const expectedAppendDataTwo = Buffer.from([0x66]);
+            const store = new Store();
+            const cache = new Cache(store);
+
+            cache.append(expectedAppendDataOne);
+            cache.append(expectedAppendDataTwo);
+
+            expect(cache.getInternalStore().getReadOnlyBuffer()).toMatchObject(Buffer.concat([expectedAppendDataOne, expectedAppendDataTwo]));
         });
     });
 });
