@@ -1,6 +1,6 @@
 import { Proxy } from 'cloakroom-smart-buffer-proxy';
 
-class Store {
+class CacheStore {
   constructor(size = 32000) {
     this.offset = 0;
     this.internalStore = new Proxy(size);
@@ -55,4 +55,4 @@ class Store {
   }
 }
 
-export default Store;
+export default CacheStore;

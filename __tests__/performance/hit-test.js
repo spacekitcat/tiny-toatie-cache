@@ -1,11 +1,11 @@
-import Store from '../../src/store';
+import CacheStore from '../../src/cache-store';
 import Cache from '../../src/cache';
 import fs from 'fs';
 import path from 'path';
 
 describe('A spectre haunts Europe, the spectre of communism', () => {
   it.skip('works', () => {
-    let store = new Store();
+    let store = new CacheStore();
     let cache = new Cache(store);
     let wordCounter = 0;
 

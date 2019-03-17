@@ -1,5 +1,5 @@
 import Cache from '../../src/cache';
-import Store from '../../src/store';
+import CacheStore from '../../src/cache-store';
 import search from '../../src/search';
 
 describe('The `Cache` class', () => {
@@ -11,7 +11,7 @@ describe('The `Cache` class', () => {
 
   describe('the constructor is called with a valid store object', () => {
     it('should construct and set the internal store', () => {
-      const store = new Store();
+      const store = new CacheStore();
       const cache = new Cache(store);
 
       expect(cache.getInternalStore()).toBe(store);
@@ -21,7 +21,7 @@ describe('The `Cache` class', () => {
   describe('data is appended to the cache', () => {
     it('should push the new data to the front of the byte stack', () => {
       const expectedAppendData = Buffer.from([0x66]);
-      const store = new Store();
+      const store = new CacheStore();
       const cache = new Cache(store);
 
       cache.append(expectedAppendData);
@@ -36,7 +36,7 @@ describe('The `Cache` class', () => {
     it('should push the new data to the front of the byte stack', () => {
       const expectedAppendDataOne = Buffer.from([0x66]);
       const expectedAppendDataTwo = Buffer.from([0x66]);
-      const store = new Store();
+      const store = new CacheStore();
       const cache = new Cache(store);
 
       cache.append(expectedAppendDataOne);
@@ -50,7 +50,7 @@ describe('The `Cache` class', () => {
 
   describe('the find method is ran with an empty store', () => {
     it('should return null', () => {
-      const store = new Store();
+      const store = new CacheStore();
       const cache = new Cache(store);
 
       expect(cache.find(Buffer.from([0x44]))).toBe(null);
@@ -62,7 +62,7 @@ describe('The `Cache` class', () => {
 
     describe('and the search term does not exist (too long in any case)', () => {
       it('should return null', () => {
-        const store = new Store();
+        const store = new CacheStore();
         store.put = jest.fn();
         const cache = new Cache(store);
 
@@ -75,7 +75,7 @@ describe('The `Cache` class', () => {
 
     describe('and the search term does not exist (same length as store)', () => {
       it('should return null', () => {
-        const store = new Store();
+        const store = new CacheStore();
         store.put = jest.fn();
         const cache = new Cache(store);
 
@@ -89,7 +89,7 @@ describe('The `Cache` class', () => {
     describe('and the search term does exist', () => {
       it('should create a cache entry and then return expected offset', () => {
         const expectedSearchTerm = Buffer.from([0x54]);
-        const store = new Store();
+        const store = new CacheStore();
         const spy = jest.spyOn(store, 'put');
         const cache = new Cache(store);
 
@@ -108,7 +108,7 @@ describe('The `Cache` class', () => {
     describe('and the search term is cached (double lookup)', () => {
       it('should hit the cache and return the offset', () => {
         const expectedSearchTerm = Buffer.from([0x54]);
-        const store = new Store();
+        const store = new CacheStore();
         const spy = jest.spyOn(store, 'read');
         const cache = new Cache(store);
 
