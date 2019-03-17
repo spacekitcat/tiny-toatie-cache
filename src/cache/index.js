@@ -14,9 +14,19 @@ class Cache {
   }
 
   find(target) {
+    // Warn lookup...
+    const cachedResult = this.store.read(target);
+
+    if (cachedResult) {
+      return cachedResult;
+    }
+
+    // Cold lookup...
     const result = search(Buffer.from(this.store.getReadOnlyBuffer()), target);
 
-    this.store.put(target, result);
+    if (result) {
+      this.store.put(target, result);
+    }
 
     return result;
   }
