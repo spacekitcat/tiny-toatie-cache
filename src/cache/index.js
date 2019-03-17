@@ -14,7 +14,6 @@ class Cache {
   }
 
   find(target) {
-    console.log('warm bit');
     // Warn lookup...
     const cachedResult = this.store.read(target);
 
@@ -22,16 +21,14 @@ class Cache {
       return cachedResult;
     }
 
-    console.log('cold bit');
     // Cold lookup...
     const result = search(Buffer.from(this.store.getReadOnlyBuffer()), target);
 
-    console.log('cache do');
     if (result) {
-      this.store.put(target, result);
+      this.store.put(target, result.offset);
     }
 
-    console.log('return');
+    console.log('miss');
     return result;
   }
 

@@ -90,7 +90,7 @@ describe('The `Cache` class', () => {
       it('should create a cache entry and then return expected offset', () => {
         const expectedSearchTerm = Buffer.from([0x54]);
         const store = new Store();
-        store.put = jest.fn();
+        const spy = jest.spyOn(store, 'put');
         const cache = new Cache(store);
 
         cache.append(expectedSearchTerm);
@@ -98,9 +98,9 @@ describe('The `Cache` class', () => {
         expect(cache.find(expectedSearchTerm)).toMatchObject(
           search(expectedSearchTerm, expectedSearchTerm)
         );
-        expect(store.put).toHaveBeenCalledWith(
+        expect(spy).toHaveBeenCalledWith(
           expectedSearchTerm,
-          search(expectedSearchTerm, expectedSearchTerm)
+          search(expectedSearchTerm, expectedSearchTerm).offset
         );
       });
     });
@@ -109,14 +109,14 @@ describe('The `Cache` class', () => {
       it('should hit the cache and return the offset', () => {
         const expectedSearchTerm = Buffer.from([0x54]);
         const store = new Store();
-        store.read = jest.fn();
+        const spy = jest.spyOn(store, 'read');
         const cache = new Cache(store);
 
         cache.append(expectedSearchTerm);
 
         cache.find(expectedSearchTerm);
         cache.find(expectedSearchTerm);
-        expect(store.read).toHaveBeenCalledWith(expectedSearchTerm);
+        expect(spy).toHaveBeenCalledWith(expectedSearchTerm);
       });
     });
   });
