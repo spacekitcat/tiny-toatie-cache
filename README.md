@@ -21,8 +21,8 @@ The library uses [cloakroom-smart-buffer-proxy](https://www.npmjs.com/package/cl
 ## Building
 
 ```javascript
-/iberian-magpie-slide-cache-prototype <master> % yarn install
-/iberian-magpie-slide-cache-prototype <master> % yarn build
+/tiny-toatie-cache <master> % yarn install
+/tiny-toatie-cache <master> % yarn build
 ```
 
 ## Unit tests
@@ -30,5 +30,5 @@ The library uses [cloakroom-smart-buffer-proxy](https://www.npmjs.com/package/cl
 The unit tests use Jest and the Yarn command below runs them.
 
 ```bash
-/lz77-nodejs-streams ‹master*› % yarn test
+/tiny-toatie-cache ‹master*› % yarn test
 ```
