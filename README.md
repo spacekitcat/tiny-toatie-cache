@@ -44,7 +44,7 @@ First, add the dependency to your project like so:
 And then you just use the library like the example below (use `require` if you don't use `Babel`):
 
 ```javascript
-const ToatieCache = require('tiny-toatie-cache');
+import ToatieCache from 'tiny-toatie-cache';
 
 const cacheStorageSize = 1234456;
 const cache = ToatieCache.build(cacheStorageSize);
@@ -66,6 +66,15 @@ cache.find(Buffer.from([0x33, 0x56]));
 
 /* Third call, a cache hit */
 cache.find(Buffer.from([0x33, 0x56]));
+```
+
+And its output:
+
+```bash
+/your-rad-project ‹master*› % node sample.js
+Cache miss! Operation time: 20ms
+Cache hit! Operation time: 1ms
+Cache hit! Operation time: 0ms
 ```
 
 ## Performance
