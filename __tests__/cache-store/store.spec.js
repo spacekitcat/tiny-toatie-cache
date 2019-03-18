@@ -56,8 +56,6 @@ describe('The `Store` class', () => {
       const expectedAppendList = [0x75, 0x64, 0x26, 0x44, 0x83, 0xff];
       sut.append(Buffer.from(expectedAppendList));
 
-      const hitMock = jest.fn();
-      sut.on('hit', hitMock);
       sut.put(key, 3);
 
       expect(sut.read(key)).toMatchObject({
@@ -66,7 +64,6 @@ describe('The `Store` class', () => {
         length: 1
       });
       expect(sut.getStoreSize()).toBe(1);
-      expect(hitMock).toHaveBeenCalledWith(key.toString());
     });
   });
   
@@ -145,15 +142,5 @@ describe('The `Store` class', () => {
       expect(sut.read(key)).toBe(null);
       expect(sut.getStoreSize()).toBe(0);
     });
-  });
-
-  describe('An unrecognized event is registered via `on`', () => {
-    it('should regsiter nothing', () => {
-      const sut = new CacheStore(6);
-      const fakeCallback = jest.fn();
-      sut.on('fake', fakeCallback);
-
-      expect(sut.hitHandler).not.toBe(fakeCallback);
-    })
   });
 });

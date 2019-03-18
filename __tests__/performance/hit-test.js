@@ -4,10 +4,25 @@ import fs from 'fs';
 import path from 'path';
 
 describe('A spectre haunts Europe, the spectre of communism', () => {
-  it.skip('works', () => {
-    let store = new CacheStore();
+  it('hit/miss efficiency test', () => {
+    let store = new CacheStore(128000);
     let cache = new Cache(store);
+    let hitCount = 0;
+    let hitTimeAvg = 0;
+    let missCount = 0;
+    let missTimeAvg = 0;
     let wordCounter = 0;
+    let words = [];
+
+    cache.on('hit', (hitTime) => {
+      hitCount += 1;
+      hitTimeAvg += hitTime;
+    });
+
+    cache.on('miss', (missTime) => {
+      missCount += 1;
+      missTimeAvg += missTime;
+    });
 
     const readStream = fs.createReadStream(
       path.join(__dirname, 'the-communist-manifesto.txt')
@@ -25,15 +40,21 @@ describe('A spectre haunts Europe, the spectre of communism', () => {
         const key = buffer.toString();
         if (key.length > 0) {
           cache.append(buffer);
-          wordCounter += buffer.length;
+          words.push(buffer);
           cache.find(buffer);
+          wordCounter += 1;
         }
         buffer = Buffer.from([]);
       }
     });
 
     fileWriteStream.on('finish', () => {
-      console.log('Word count : ', wordCounter);
+      console.log('Word count: ', wordCounter);
+      console.log('Miss count: ', missCount);
+      console.log('Miss operation avg. time: ',  missTimeAvg / missCount);
+      console.log('Hit count: ', hitCount);
+      console.log('Hit operation avg. time: ', hitTimeAvg / hitCount);
+
     })
 
     fileWriteStream.on('error', error => {

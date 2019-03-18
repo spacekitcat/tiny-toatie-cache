@@ -21,37 +21,23 @@ class CacheStore {
   }
 
   read(key) {
-    const cacheHit = this.store[key.toString()];
+    const keyStr = key.toString();
+    const cacheHit = this.store[keyStr];
     if (!cacheHit) {
       return null;
     }
 
     const res = this.internalStore.resolveTicket(cacheHit);
     if (!res) {
-      delete this.store[key.toString()];
+      delete this.store[keyStr];
       return null;
     }
 
-    if (this.hitHandler) {
-      this.hitHandler(key.toString());
-    }
-
-    const buffer = this.getReadOnlyBuffer();
-    let value;
-    const from = buffer.length - res.offset - 1;
-    value = buffer.slice(from, res.length);
-
-    return { offset: res.offset, value: value, length: key.length };
+    return { offset: res.offset, value: Buffer.from(keyStr), length: key.length };
   }
 
   getStoreSize() {
     return Object.entries(this.store).length;
-  }
-
-  on(eventKey, handler) {
-    if (eventKey === 'hit') {
-      this.hitHandler = handler;
-    }
   }
 }
 

@@ -8,6 +8,7 @@ class Cache {
 
     this.store = store;
     this.events = {};
+    this.lastTimeSnapshot = 0;
   }
 
   append(list) {
@@ -15,11 +16,12 @@ class Cache {
   }
 
   find(target) {
+    this.lastTimeSnapshot = Date.now();
     // Warn lookup...
     const cachedResult = this.store.read(target);
 
     if (cachedResult) {
-      this.callOn('hit');
+      this.callOn('hit', Date.now() - this.lastTimeSnapshot);
       return cachedResult;
     }
 
@@ -30,7 +32,7 @@ class Cache {
       this.store.put(target, result.offset);
     }
 
-    this.callOn('miss');
+    this.callOn('miss', Date.now() - this.lastTimeSnapshot);
     return result;
   }
 
@@ -42,10 +44,10 @@ class Cache {
     this.events[eventKey] = eventFn;
   }
 
-  callOn(eventKey) {
+  callOn(eventKey, timeTook) {
     const callback = this.events[eventKey];
     if (callback) {
-      callback();
+      callback(timeTook);
     }
   }
 }
