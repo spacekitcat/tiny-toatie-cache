@@ -33,6 +33,35 @@ The unit tests use Jest and the Yarn command below runs them.
 /tiny-toatie-cache ‹master*› % yarn test
 ```
 
+## Adding to your project
+
+First, add the dependency to your project like so:
+
+```bash
+/your-rad-project ‹master*› % yarn add tiny-toatie-cache
+```
+
+And then you just use the library like the example below (use `require` if you don't use `Babel`):
+
+```javascript
+import ToatieCache from '../lib/cache-factory';
+
+const cacheStorageSize = 1234456;
+const cache = ToatieCache.build(cacheStorageSize);
+
+cache.append(Buffer.from([0x66, 0x84 0x33, 0x56]));
+
+cache.on('hit', timeTook => { console.log(`Cache hit! Operation time: ${timeTook}`) });
+
+cache.on('miss', timeTook => { console.log(`Cache miss! Operation time: ${timeTook}`) });
+
+/* First call, a cold lookup */
+cache.find(Buffer.from([0x33, 0x56]));
+
+/* Second call, a cache hit */
+cache.find(Buffer.from([0x33, 0x56]));
+```
+
 ## Performance
 
 `hit-test.js` reads, appends and then performs a search for words read sequntially from a text file. When the test completes, it summarises the number of words processed, how often it hits, misses and the average time took for each operation type.

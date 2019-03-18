@@ -1,3 +1,3 @@
-const proxy = require('../lib/cache');
+const ToatieCache = require('../lib/cache-factory');
 
-module.exports.Proxy = proxy.default;
+module.exports.Proxy = { build: ToatieCache.default };
