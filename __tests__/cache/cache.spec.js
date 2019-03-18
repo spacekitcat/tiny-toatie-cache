@@ -64,12 +64,15 @@ describe('The `Cache` class', () => {
       it('should return null', () => {
         const store = new CacheStore();
         store.put = jest.fn();
+        const missMock = jest.fn();
         const cache = new Cache(store);
 
         cache.append(dictionary);
+        cache.on('miss', missMock);
 
         expect(cache.find(Buffer.from([0x44, 0x67]))).toBe(null);
         expect(store.put).not.toHaveBeenCalled();
+        expect(missMock).toHaveBeenCalled();
       });
     });
 
@@ -77,12 +80,15 @@ describe('The `Cache` class', () => {
       it('should return null', () => {
         const store = new CacheStore();
         store.put = jest.fn();
+        const missMock = jest.fn();
         const cache = new Cache(store);
 
         cache.append(dictionary);
+        cache.on('miss', missMock);
 
         expect(cache.find(Buffer.from([0x44]))).toBe(null);
         expect(store.put).not.toHaveBeenCalled();
+        expect(missMock).toHaveBeenCalled();
       });
     });
 
@@ -91,9 +97,11 @@ describe('The `Cache` class', () => {
         const expectedSearchTerm = Buffer.from([0x54]);
         const store = new CacheStore();
         const spy = jest.spyOn(store, 'put');
+        const missMock = jest.fn();
         const cache = new Cache(store);
 
         cache.append(expectedSearchTerm);
+        cache.on('miss', missMock);
 
         expect(cache.find(expectedSearchTerm)).toMatchObject(
           search(expectedSearchTerm, expectedSearchTerm)
@@ -102,6 +110,7 @@ describe('The `Cache` class', () => {
           expectedSearchTerm,
           search(expectedSearchTerm, expectedSearchTerm).offset
         );
+        expect(missMock).toHaveBeenCalled();
       });
     });
 
@@ -109,17 +118,35 @@ describe('The `Cache` class', () => {
       it('should hit the cache and return the offset', () => {
         const expectedSearchTerm = Buffer.from([0x54]);
         const store = new CacheStore();
+        const hitMock = jest.fn();
         const spy = jest.spyOn(store, 'read');
         const cache = new Cache(store);
 
         cache.append(expectedSearchTerm);
+        cache.on('hit', hitMock);
 
         cache.find(expectedSearchTerm);
         cache.find(expectedSearchTerm);
         expect(spy).toHaveBeenCalledWith(expectedSearchTerm);
+        expect(hitMock).toHaveBeenCalled();
       });
     });
   });
 
   describe('the find method is ran with a two element store', () => {});
+
+  describe('An unrecognized event is registered via `on`', () => {
+    it('should regsiter nothing', () => {
+      const expectedSearchTerm = Buffer.from([0x54]);
+      const store = new CacheStore();
+      const cache = new Cache(store);
+      const fakeCallback = jest.fn();
+
+      cache.append(expectedSearchTerm);
+      cache.on('fake', fakeCallback);
+
+      cache.find(Buffer.from([0x44]))
+      expect(fakeCallback).not.toBeCalled();
+    });
+  });
 });

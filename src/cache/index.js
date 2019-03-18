@@ -7,6 +7,7 @@ class Cache {
     }
 
     this.store = store;
+    this.events = {};
   }
 
   append(list) {
@@ -18,6 +19,7 @@ class Cache {
     const cachedResult = this.store.read(target);
 
     if (cachedResult) {
+      this.callOn('hit');
       return cachedResult;
     }
 
@@ -28,12 +30,23 @@ class Cache {
       this.store.put(target, result.offset);
     }
 
-    console.log('miss');
+    this.callOn('miss');
     return result;
   }
 
   getInternalStore() {
     return this.store;
+  }
+
+  on(eventKey, eventFn) {
+    this.events[eventKey] = eventFn;
+  }
+
+  callOn(eventKey) {
+    const callback = this.events[eventKey];
+    if (callback) {
+      callback();
+    }
   }
 }
 
