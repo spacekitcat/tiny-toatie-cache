@@ -97,18 +97,21 @@ Ran all test suites matching /__tests__\/performance\//i.
 Jest did not exit one second after the test run has completed.
 
 This usually means that there are asynchronous operations that weren't stopped in your tests. Consider running Jest with `--detectOpenHandles` to troubleshoot this issue.
+  console.log __tests__/performance/hit-test.performance.js:51
+    Total time: 10.403611111111111
+
   console.log __tests__/performance/hit-test.performance.js:52
-    Word count:  12933
+    Word count:  13376
 
   console.log __tests__/performance/hit-test.performance.js:53
-    Miss count:  4414
+    Miss count:  5743
 
   console.log __tests__/performance/hit-test.performance.js:54
-    Miss operation avg. time:  4.881966470321704
+    Miss operation avg. time:  6.475361309420164
 
   console.log __tests__/performance/hit-test.performance.js:55
-    Hit count:  8519
+    Hit count:  34385
 
   console.log __tests__/performance/hit-test.performance.js:56
-    Hit operation avg. time:  0.0036389247564268105
+    Hit operation avg. time:  0.0023556783481169115
 ```
