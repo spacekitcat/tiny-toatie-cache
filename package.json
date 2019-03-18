@@ -14,7 +14,7 @@
     "jest": "^24.0.0"
   },
   "scripts": {
-    "test": "jest --coverage",
+    "test": "jest .spec.js --coverage",
     "prebuild": "babel src --out-dir lib --source-maps",
     "build": "npm run test",
     "prepublish": "npm run build"
