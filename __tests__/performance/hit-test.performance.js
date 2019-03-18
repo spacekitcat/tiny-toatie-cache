@@ -12,7 +12,7 @@ describe('A spectre haunts Europe, the spectre of communism', () => {
     let missCount = 0;
     let missTimeAvg = 0;
     let wordCounter = 0;
-    let words = [];
+    let start = Date.now();
 
     cache.on('hit', (hitTime) => {
       hitCount += 1;
@@ -29,26 +29,26 @@ describe('A spectre haunts Europe, the spectre of communism', () => {
     );
     let fileWriteStream = fs.createWriteStream('/dev/null');
 
-    let buffer = Buffer.from([]);
     readStream.on('data', chunk => {
+      let bufferOffsetStart = 0;
       for (let i = 0; i < chunk.length; ++i) {
         if (chunk[i] !== 0x20) {
-          buffer = Buffer.concat([buffer, chunk.slice(i, i + 1)]);
           continue;
         }
-
-        const key = buffer.toString();
-        if (key.length > 0) {
-          cache.append(buffer);
-          words.push(buffer);
-          cache.find(buffer);
-          wordCounter += 1;
-        }
-        buffer = Buffer.from([]);
+        
+        const buffer = chunk.slice(bufferOffsetStart, i);
+        cache.append(buffer);
+        cache.find(buffer);
+        cache.find(buffer);
+        cache.find(buffer);
+        wordCounter += 1;
+        bufferOffsetStart = i + 1;     
       }
     });
 
     fileWriteStream.on('finish', () => {
+      start = Date.now() - start;
+      console.log('Total time:', start / 60 / 60);
       console.log('Word count: ', wordCounter);
       console.log('Miss count: ', missCount);
       console.log('Miss operation avg. time: ',  missTimeAvg / missCount);
