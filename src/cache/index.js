@@ -15,17 +15,15 @@ class Cache {
     this.store.append(list);
   }
 
-  find(target) {
-    this.lastTimeSnapshot = Date.now();
-    // Warn lookup...
+  checkCache(target) {
     const cachedResult = this.store.read(target);
-
     if (cachedResult) {
       this.callOn('hit', Date.now() - this.lastTimeSnapshot);
-      return cachedResult;
     }
+    return cachedResult;
+  }
 
-    // Cold lookup...
+  coldSearch(target) {
     const result = search(Buffer.from(this.store.getReadOnlyBuffer()), target);
 
     if (result) {
@@ -33,7 +31,18 @@ class Cache {
     }
 
     this.callOn('miss', Date.now() - this.lastTimeSnapshot);
+
     return result;
+  }
+
+  find(target) {
+    this.lastTimeSnapshot = Date.now();
+    const cacheResult = this.checkCache(target);
+    if (cacheResult) {
+      return cacheResult;
+    }
+
+    return this.coldSearch(target);
   }
 
   getInternalStore() {
