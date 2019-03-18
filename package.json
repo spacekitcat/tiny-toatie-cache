@@ -2,7 +2,7 @@
   "name": "tiny-toatie-cache",
   "version": "0.2.4",
   "description": "Prototype cache system for sliding window lookup operations",
-  "main": "index.js",
+  "main": "lib/index.js",
   "repository": "https://github.com/spacekitcat/tiny-toatie-cache",
   "author": "Lisa Burton",
   "license": "MIT",
@@ -19,7 +19,7 @@
     "jest": "^24.0.0"
   },
   "scripts": {
-    "babel": "babel src --out-dir lib --source-maps",
+    "babel": "babel src/ --out-dir lib/ --source-maps",
     "test": "jest .spec.js --coverage",
     "prebuild": "npm run babel",
     "build": "npm run test",

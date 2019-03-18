@@ -1,4 +1,4 @@
-import search from '../../src/search';
+import search from '../search';
 
 class Cache {
   constructor(store) {

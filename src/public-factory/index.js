@@ -1,4 +1,4 @@
-import CacheStore from '../../src/cache-store';
-import Cache from '../../src/cache';
+import CacheStore from '../cache-store';
+import Cache from '../cache';
 
 export default maximumSize => new Cache(new CacheStore(maximumSize));
