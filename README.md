@@ -1,8 +1,8 @@
-**This project is a work in progress. It might not be very useful to anyone in this state.**
+# This is a prototype, I would treat it as anything more than a toy at this stage
 
-# tiny-toatie-cache
+## tiny-toatie-cache
 
-This library is designed to cache search operations performed against a [Node.js Buffer](https://nodejs.org/api/buffer.html#buffer_buffer). The maximum size of the underlying storage Buffer is bounded to a fixed value (specified on insantiatation). New data is *appended to the front* and if the upper size limit is hit, the *oldest items will be deleted from the back*.
+This library is designed to cache search operations performed against a [Node.js Buffer](https://nodejs.org/api/buffer.html#buffer_buffer). The maximum size of the underlying storage Buffer is bounded (the upper bound is specified on insantiatation). New data is *appended to the front* and if the upper size limit is hit, the *oldest items will be deleted from the back*.
 
 ## Use case
 
