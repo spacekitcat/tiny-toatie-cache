@@ -2,7 +2,7 @@ import Cache from '../../src/cache';
 import CacheStore from '../../src/cache-store';
 import search from '../../src/search';
 
-const insantiateCache = (store = new CacheStore()) => new Cache(store);
+const instantiate = (store = new CacheStore()) => new Cache(store);
 
 describe('The `Cache` class', () => {
   describe('the constructor is called with zero arguments', () => {
@@ -14,7 +14,7 @@ describe('The `Cache` class', () => {
   describe('the constructor is called with a valid store object', () => {
     it('should construct and set the internal store', () => {
       const store = new CacheStore();
-      const cache = insantiateCache(store);
+      const cache = instantiate(store);
 
       expect(cache.getInternalStore()).toBe(store);
     });
@@ -23,7 +23,7 @@ describe('The `Cache` class', () => {
   describe('data is appended to the cache', () => {
     it('should push the new data to the front of the byte stack', () => {
       const expectedAppendData = Buffer.from([0x66]);
-      const cache = insantiateCache();
+      const cache = instantiate();
 
       cache.append(expectedAppendData);
 
@@ -37,7 +37,7 @@ describe('The `Cache` class', () => {
     it('should push the new data to the front of the byte stack', () => {
       const expectedAppendDataOne = Buffer.from([0x66]);
       const expectedAppendDataTwo = Buffer.from([0x66]);
-      const cache = insantiateCache();
+      const cache = instantiate();
 
       cache.append(expectedAppendDataOne);
       cache.append(expectedAppendDataTwo);
@@ -50,7 +50,7 @@ describe('The `Cache` class', () => {
 
   describe('the find method is ran with an empty store', () => {
     it('should return null', () => {
-      const cache = insantiateCache();
+      const cache = instantiate();
 
       expect(cache.find(Buffer.from([0x44]))).toBe(null);
     });
@@ -64,7 +64,7 @@ describe('The `Cache` class', () => {
         const store = new CacheStore();
         store.put = jest.fn();
         const missMock = jest.fn();
-        const cache = insantiateCache(store);
+        const cache = instantiate(store);
 
         cache.append(dictionary);
         cache.on('miss', missMock);
@@ -80,7 +80,7 @@ describe('The `Cache` class', () => {
         const store = new CacheStore();
         store.put = jest.fn();
         const missMock = jest.fn();
-        const cache = insantiateCache(store);
+        const cache = instantiate(store);
 
         cache.append(dictionary);
         cache.on('miss', missMock);
@@ -97,7 +97,7 @@ describe('The `Cache` class', () => {
         const store = new CacheStore();
         const spy = jest.spyOn(store, 'put');
         const missMock = jest.fn();
-        const cache = insantiateCache(store);
+        const cache = instantiate(store);
 
         cache.append(expectedSearchTerm);
         cache.on('miss', missMock);
@@ -119,13 +119,17 @@ describe('The `Cache` class', () => {
         const store = new CacheStore();
         const hitMock = jest.fn();
         const spy = jest.spyOn(store, 'read');
-        const cache = insantiateCache(store);
+        const cache = instantiate(store);
 
         cache.append(expectedSearchTerm);
         cache.on('hit', hitMock);
 
-        cache.find(expectedSearchTerm);
-        cache.find(expectedSearchTerm);
+        expect(cache.find(expectedSearchTerm)).toMatchObject(
+          Object.assign(search(expectedSearchTerm, expectedSearchTerm), { value: expectedSearchTerm })
+        );
+        expect(cache.find(expectedSearchTerm)).toMatchObject(
+          Object.assign(search(expectedSearchTerm, expectedSearchTerm), { value: expectedSearchTerm })
+        );
         expect(spy).toHaveBeenCalledWith(expectedSearchTerm);
         expect(hitMock).toHaveBeenCalled();
       });
@@ -135,10 +139,10 @@ describe('The `Cache` class', () => {
   describe('the find method is ran with a two element store', () => {});
 
   describe('An unrecognized event is registered via `on`', () => {
-    it('should regsiter nothing', () => {
+    it('should register nothing', () => {
       const expectedSearchTerm = Buffer.from([0x54]);
       const store = new CacheStore();
-      const cache = insantiateCache(store);
+      const cache = instantiate(store);
       const fakeCallback = jest.fn();
 
       cache.append(expectedSearchTerm);

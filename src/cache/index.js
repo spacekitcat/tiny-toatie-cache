@@ -32,7 +32,7 @@ class Cache {
 
     this.callOn('miss', Date.now() - this.lastTimeSnapshot);
 
-    return result;
+    return result ? Object.assign({ value: target }, result) : null;
   }
 
   find(target) {
