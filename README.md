@@ -62,19 +62,19 @@ cache.on('miss', timeTook => { console.log(`Cache miss! Operation time: ${timeTo
 
 /** First call, a cold lookup.
  *
- *  response: `{ offset: 64005, length: 2 }`
+ *  response: `{ offset: 64005, value: <Buffer 33 56>, length: 2 }`
  **/
 console.log(cache.find(Buffer.from([0x33, 0x56])));
 
 /** Second call, a cache hit
  *
- *  response: `{ offset: 64005, length: 2 }`
+ *  response: `{ offset: 64005, value: <Buffer 33 56>, length: 2 }`
  **/
 console.log(cache.find(Buffer.from([0x33, 0x56])));
 
 /** Third call, a cache hit
  *
- *  response: `{ offset: 64005, length: 2 }`
+ *  response: `{ offset: 64005, value: <Buffer 33 56>, length: 2 }`
  **/
 console.log(cache.find(Buffer.from([0x33, 0x56])));
 
