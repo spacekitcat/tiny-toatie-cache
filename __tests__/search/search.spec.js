@@ -103,4 +103,15 @@ describe('The `search` method', () => {
       });
     });
   });
+
+  describe('when the dictionary has a size of 3', () => {
+    it('return a match (dictionary: [0x57, 0x23, 0x87], searchBuffer: [0x23, 0x87])', () => {
+      expect(
+        search(Buffer.from([0x57, 0x23, 0x87]), Buffer.from([0x23, 0x87]))
+      ).toMatchObject({
+        offset: 1,
+        length: 2
+      });
+    });
+  });
 });

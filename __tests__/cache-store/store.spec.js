@@ -66,7 +66,6 @@ describe('The `Store` class', () => {
       expect(sut.getStoreSize()).toBe(1);
     });
   });
-  
 
   describe('An existing multi-byte key is put and retrieved', () => {
     it('should put and retrieve as expected', () => {
@@ -85,7 +84,7 @@ describe('The `Store` class', () => {
       expect(sut.getStoreSize()).toBe(1);
     });
 
-    it('should put and retrieve as expected (alt)', () => {
+    it('should put and retrieve as expected (alt 1)', () => {
       const sut = new CacheStore();
       const key = Buffer.from([0x23, 0x5f]);
       const expectedAppendList = [0x15, 0x24, 0x36, 0x14, 0x23, 0x5f];
@@ -93,7 +92,23 @@ describe('The `Store` class', () => {
 
       sut.put(key, 1);
 
-      expect(sut.read(key)).toMatchObject({
+      expect(sut.read(key)).toEqual({
+        value: key,
+        offset: 1,
+        length: 2
+      });
+      expect(sut.getStoreSize()).toBe(1);
+    });
+
+    it('should put and retrieve as expected (alt 2)', () => {
+      const sut = new CacheStore();
+      const key = Buffer.from([0x23, 0x87]);
+      const expectedAppendList = [0x57, 0x23, 0x87];
+      sut.append(Buffer.from(expectedAppendList));
+
+      sut.put(key, 1);
+
+      expect(sut.read(key)).toEqual({
         value: key,
         offset: 1,
         length: 2
@@ -105,11 +120,11 @@ describe('The `Store` class', () => {
   describe('A key `length` which check that an object, not an array, is the underlying store', () => {
     it('should put and retrieve as expected', () => {
       const sut = new CacheStore();
-      const key = Buffer.from([0x6c, 0x65, 0x6E, 0x67, 0x74, 0x68]);
+      const key = Buffer.from([0x6c, 0x65, 0x6e, 0x67, 0x74, 0x68]);
       sut.append(key);
 
       sut.put(key, 5);
-      
+
       expect(sut.read(key)).toMatchObject({
         value: key,
         offset: 5,
@@ -119,10 +134,10 @@ describe('The `Store` class', () => {
     });
   });
 
-  describe('An non-existant key is specified (store-miss)', () => {
+  describe('An non-existent key is specified (store-miss)', () => {
     it('should returns `null`', () => {
       const sut = new CacheStore();
-      const key = Buffer.from([0xFF, 0xFF]);
+      const key = Buffer.from([0xff, 0xff]);
       const expectedAppendList = [0x75, 0x64, 0x26, 0x44, 0x83, 0xff];
       sut.append(Buffer.from(expectedAppendList));
 
@@ -132,7 +147,7 @@ describe('The `Store` class', () => {
   });
 
   describe('An expired key is specified (store-expiry)', () => {
-    it('shoud return `null`', () => {
+    it('should return `null`', () => {
       const sut = new CacheStore(6);
       const key = Buffer.from([0x64]);
       sut.append(Buffer.from([0x01, 0x02, 0x03, 0x04, 0x05, 0x06]));

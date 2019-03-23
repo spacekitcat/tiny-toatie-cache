@@ -1,4 +1,5 @@
 import { Proxy } from 'cloakroom-smart-buffer-proxy';
+import { metrohash64 } from 'metrohash';
 
 class CacheStore {
   constructor(size = 32000) {
@@ -15,25 +16,33 @@ class CacheStore {
     return this.internalStore.getReadOnlyBuffer();
   }
 
+  getKeyHash(key) {
+    return metrohash64(key, 918298938);
+  }
+
   put(key, offset) {
     const ticket = this.internalStore.createTicket(offset);
-    this.store[key.toString()] = ticket;
+    this.store[this.getKeyHash(key)] = ticket;
   }
 
   read(key) {
-    const keyStr = key.toString();
-    const cacheHit = this.store[keyStr];
+    const keyHash = this.getKeyHash(key);
+    const cacheHit = this.store[keyHash];
     if (!cacheHit) {
       return null;
     }
 
     const res = this.internalStore.resolveTicket(cacheHit);
     if (!res) {
-      delete this.store[keyStr];
+      delete this.store[keyHash];
       return null;
     }
 
-    return { offset: res.offset, value: Buffer.from(keyStr), length: key.length };
+    return {
+      offset: res.offset,
+      value: key,
+      length: key.length
+    };
   }
 
   getStoreSize() {
