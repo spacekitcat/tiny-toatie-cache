@@ -27,7 +27,7 @@ describe('The `Cache` class', () => {
 
       cache.append(expectedAppendData);
 
-      expect(cache.getInternalStore().getReadOnlyBuffer()).toMatchObject(
+      expect(cache.getInternalStore().getBufferCopy()).toMatchObject(
         expectedAppendData
       );
     });
@@ -42,7 +42,7 @@ describe('The `Cache` class', () => {
       cache.append(expectedAppendDataOne);
       cache.append(expectedAppendDataTwo);
 
-      expect(cache.getInternalStore().getReadOnlyBuffer()).toMatchObject(
+      expect(cache.getInternalStore().getBufferCopy()).toMatchObject(
         Buffer.concat([expectedAppendDataOne, expectedAppendDataTwo])
       );
     });
@@ -125,10 +125,14 @@ describe('The `Cache` class', () => {
         cache.on('hit', hitMock);
 
         expect(cache.find(expectedSearchTerm)).toMatchObject(
-          Object.assign(search(expectedSearchTerm, expectedSearchTerm), { value: expectedSearchTerm })
+          Object.assign(search(expectedSearchTerm, expectedSearchTerm), {
+            value: expectedSearchTerm
+          })
         );
         expect(cache.find(expectedSearchTerm)).toMatchObject(
-          Object.assign(search(expectedSearchTerm, expectedSearchTerm), { value: expectedSearchTerm })
+          Object.assign(search(expectedSearchTerm, expectedSearchTerm), {
+            value: expectedSearchTerm
+          })
         );
         expect(spy).toHaveBeenCalledWith(expectedSearchTerm);
         expect(hitMock).toHaveBeenCalled();

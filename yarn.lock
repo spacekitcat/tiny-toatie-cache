@@ -1048,10 +1048,10 @@ cliui@^4.0.0:
     strip-ansi "^4.0.0"
     wrap-ansi "^2.0.0"
 
-cloakroom-smart-buffer-proxy@^2.0.7:
-  version "2.0.7"
-  resolved "https://registry.yarnpkg.com/cloakroom-smart-buffer-proxy/-/cloakroom-smart-buffer-proxy-2.0.7.tgz#429b7be999298fcc6430d5154784e98674749be6"
-  integrity sha512-K5kD2iNbvCdVZ/vS+wVsamNv4lJcG5onZookaOMMWoqGdu4M57QrddLobSH75A5HK/oR3VnHLHs2XTDo3xXTQA==
+cloakroom-smart-buffer-proxy@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/cloakroom-smart-buffer-proxy/-/cloakroom-smart-buffer-proxy-2.1.1.tgz#eb46d78b1726515d99b422b8349462d0da57a9cf"
+  integrity sha512-dhJnykJ9YxdlVEMNaCYlZHy0KUGURlAcWduV81sUtUjWekkEiP9vm5xzAFpiOBbS+ZtrBj0T6OcZP3VUcI65cg==
 
 co@^4.6.0:
   version "4.6.0"
