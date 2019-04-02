@@ -24,7 +24,7 @@ class Cache {
   }
 
   coldSearch(target) {
-    const result = search(Buffer.from(this.store.getReadOnlyBuffer()), target);
+    const result = search(Buffer.from(this.store.getBufferCopy()), target);
 
     if (result) {
       this.store.put(target, result.offset);

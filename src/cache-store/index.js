@@ -12,8 +12,8 @@ class CacheStore {
     this.internalStore.append(list);
   }
 
-  getReadOnlyBuffer() {
-    return this.internalStore.getReadOnlyBuffer();
+  getBufferCopy() {
+    return this.internalStore.getBufferCopy();
   }
 
   getKeyHash(key) {
