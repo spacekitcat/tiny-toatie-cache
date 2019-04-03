@@ -22,7 +22,7 @@ class CacheStore {
 
   put(key, offset) {
     const ticket = this.internalStore.createTicket(offset);
-    this.store[this.getKeyHash(key)] = ticket;
+    this.store[this.getKeyHash(key)] = { ticket };
   }
 
   read(key) {
@@ -32,7 +32,7 @@ class CacheStore {
       return null;
     }
 
-    const res = this.internalStore.resolveTicket(cacheHit);
+    const res = this.internalStore.resolveTicket(cacheHit.ticket);
     if (!res) {
       delete this.store[keyHash];
       return null;
