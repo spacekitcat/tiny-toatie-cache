@@ -26,13 +26,9 @@ class Cache {
   coldSearch(target) {
     const result = handleColdLookup({ store: this.store, lookupKey: target });
 
-    if (result) {
-      this.store.put(target, result.offset);
-    }
-
     this.callOn('miss', Date.now() - this.lastTimeSnapshot);
 
-    return result ? Object.assign({ value: target }, result) : null;
+    return result;
   }
 
   find(target) {

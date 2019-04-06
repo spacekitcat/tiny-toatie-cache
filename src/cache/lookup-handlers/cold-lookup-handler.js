@@ -2,5 +2,11 @@ import search from '../../search';
 
 export default request => {
   const { store, lookupKey } = request;
-  return search(store.getBufferCopy(), lookupKey);
+  const searchResult = search(store.getBufferCopy(), lookupKey);
+
+  if (searchResult) {
+    store.put(lookupKey, searchResult.offset);
+  }
+
+  return searchResult;
 };

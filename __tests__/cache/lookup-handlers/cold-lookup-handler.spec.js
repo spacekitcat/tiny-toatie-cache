@@ -10,7 +10,7 @@ const createStoreInstance = contents => {
 
 describe('The `ColdLookupHandler` function', () => {
   describe("And it's given a request it can handle", () => {
-    it('should import okay', () => {
+    it('should return a positive result from the `search` function (null would fail the assert)', () => {
       const store = createStoreInstance(Buffer.from([0x22, 0x43, 0x87]));
       const target = Buffer.from([0x43, 0x87]);
 
@@ -21,10 +21,28 @@ describe('The `ColdLookupHandler` function', () => {
         })
       ).toMatchObject(search(store.getBufferCopy(), target));
     });
+
+    it('should add the positive result to the dictionary', () => {
+      const storeContents = Buffer.from([0x22, 0x43, 0x87]);
+      const store = createStoreInstance(storeContents);
+      const target = Buffer.from([0x43, 0x87]);
+
+      const putSpy = jest.spyOn(store, 'put');
+
+      handleColdLookup({
+        store: store,
+        lookupKey: target
+      });
+
+      expect(putSpy).toHaveBeenCalledWith(
+        target,
+        search(store.getBufferCopy(), target).offset
+      );
+    });
   });
 
   describe("And it's given a request it can't handle", () => {
-    it('should import okay', () => {
+    it('should return a negative result from the `search` function', () => {
       const store = createStoreInstance(Buffer.from([0x22, 0x43, 0x22]));
       const target = Buffer.from([0x87, 0x89]);
       expect(

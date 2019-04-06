@@ -46,7 +46,8 @@ describe('The `search` method', () => {
         it('should return the expected location', () => {
           expect(search(dictionary, dictionary)).toMatchObject({
             offset: 0,
-            length: 1
+            length: 1,
+            value: dictionary
           });
         });
       });
@@ -71,16 +72,22 @@ describe('The `search` method', () => {
 
       describe('when the search term exists', () => {
         it('should return the expected location (front of Buffer)', () => {
-          expect(search(dictionary, Buffer.from([0x66]))).toMatchObject({
+          const searchKey = Buffer.from([0x66]);
+
+          expect(search(dictionary, searchKey)).toMatchObject({
             offset: 0,
-            length: 1
+            length: 1,
+            value: searchKey
           });
         });
 
         it('should return the expected location (back of Buffer)', () => {
-          expect(search(dictionary, Buffer.from([0x56]))).toMatchObject({
+          const searchKey = Buffer.from([0x56]);
+
+          expect(search(dictionary, searchKey)).toMatchObject({
             offset: 1,
-            length: 1
+            length: 1,
+            value: searchKey
           });
         });
       });
@@ -97,7 +104,8 @@ describe('The `search` method', () => {
         it('should return the expected location', () => {
           expect(search(dictionary, dictionary)).toMatchObject({
             offset: 1,
-            length: 2
+            length: 2,
+            value: dictionary
           });
         });
       });
@@ -106,11 +114,12 @@ describe('The `search` method', () => {
 
   describe('when the dictionary has a size of 3', () => {
     it('return a match (dictionary: [0x57, 0x23, 0x87], searchBuffer: [0x23, 0x87])', () => {
-      expect(
-        search(Buffer.from([0x57, 0x23, 0x87]), Buffer.from([0x23, 0x87]))
-      ).toMatchObject({
+      const searchKey = Buffer.from([0x23, 0x87]);
+
+      expect(search(Buffer.from([0x57, 0x23, 0x87]), searchKey)).toMatchObject({
         offset: 1,
-        length: 2
+        length: 2,
+        value: searchKey
       });
     });
   });
