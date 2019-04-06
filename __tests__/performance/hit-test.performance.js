@@ -19,7 +19,7 @@ const printStat = key => {
 
 describe('A spectre haunts Europe, the spectre of communism', () => {
   it('hit/miss efficiency test', () => {
-    let store = new CacheStore(13376);
+    let store = new CacheStore(2000000);
     let cache = new Cache(store);
     let hitTimeAvg = 0;
     let missTimeAvg = 0;
