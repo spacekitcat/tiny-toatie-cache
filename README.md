@@ -1,14 +1,14 @@
 # Tiny Toatie Cache
 
-This library is designed to cache search operations performed against a [Node.js Buffer](https://nodejs.org/api/buffer.html#buffer_buffer). The maximum size of the underlying storage Buffer is bounded (the upper bound is specified on instantiation). New data is *appended to the front* and if the upper size limit is hit, the *oldest items will be deleted from the back*.
+This library is designed to cache search operations performed against a [Node.js Buffer](https://nodejs.org/api/buffer.html#buffer_buffer). The maximum size of the underlying storage Buffer is bounded (the upper bound is specified on instantiation). New data is _appended to the front_ and if the upper size limit is hit, the _oldest items will be deleted from the back_.
 
-The search operation is concerned with finding out if a key exists within a `Buffer` and if it does exist, what its offset is. It's primary designed for algorithms utilizing a sliding window.
+The search operation is concerned with finding out if a key exists within a `Buffer` and if it does exist, what its offset is. It's primarily designed for algorithms utilizing a sliding window.
 
 ## Use case
 
-You interact with this library in the same way you interact with an associative array (such as a hash map). The main feature `Tiny Toatie Cache` offers is a reasonably strict boundary on the amount of memory it can use. The first time you perform a lookup for a specific key, it calls [Buffer.indexOf(key)](https://nodejs.org/api/buffer.html#buffer_buf_indexof_value_byteoffset_encoding), but for each subsequent call, the internal cache will short circuit the need for a repeat call to `indexOf`. The offsets are tracked relative to an internal pointer which means the cache entries still have enough information to tell you a keys' offset within the current internal Buffer (rather than what it *was* when it was originally cached). Expired cache entries are never returned because it can determine the validity of a cache entry before returning it with negligible overhead.
+You interact with this library in the same way you interact with an associative array (such as a hash map). The main feature `Tiny Toatie Cache` offers is a reasonably strict boundary on the amount of memory it can use. The first time you perform a lookup for a specific key, it calls [Buffer.indexOf(key)](https://nodejs.org/api/buffer.html#buffer_buf_indexof_value_byteoffset_encoding), but for each subsequent call, the internal cache will short circuit the need for a repeat call to `indexOf`. The offsets are tracked relative to an internal pointer which means the cache entries still have enough information to tell you a keys' offset within the current internal Buffer (rather than what it _was_ when it was originally cached). Expired cache entries are never returned because it can determine the validity of a cache entry before returning it with negligible overhead.
 
-This is made for an experimental implementation of LZ77, a streaming compression algorithm. It's often called a 'Streaming' because each compression packet can be decompressed in sequential order and the next chunk of clear text data will be produced. Some compression algorithms must decompress the entire stream of compression packets before they can get at any of the clear text data. The LZ77 compression algorithm also doesn't need to be distributed with a static dictionary, it performs search operations against a *sliding window* which fulfils an equivalent role of a dictionary.
+This is made for an experimental implementation of LZ77, a streaming compression algorithm. It's often called a 'Streaming' because each compression packet can be decompressed in sequential order and the next chunk of clear text data will be produced. Some compression algorithms must decompress the entire stream of compression packets before they can get at any of the clear text data. The LZ77 compression algorithm also doesn't need to be distributed with a static dictionary, it performs search operations against a _sliding window_ which fulfils an equivalent role of a dictionary.
 
 I wrote a [prototype of LZ77](https://github.com/spacekitcat/prototype-libz77) and after finally creating something reliable, I found the performance, both in terms of speed and compression, to be quite horrific. The main problem is that the dictionary buffer needs to be in the region of 2 Megabytes (2048000 Bytes) for good space savings, but that means almost 2048000 comparisons every time it has to find the next RLE. In the worst case scenario, LZ77 could have to perform a full search operation across the entire history buffer for every single byte in its input stream. Without any sort of optimization, my prototype is `O(n^2)`. The dictionary size the lz77 prototype uses is more modest and it performs terribly.
 
@@ -53,12 +53,16 @@ const cache = ToatieCache.build(cacheStorageSize);
 
 cache.append(Buffer.from([0x66, 0x84, 0x33, 0x56, 0x11, 0x34, 0x89, 0xff]));
 for (let i = 0; i < 64000; ++i) {
-    cache.append(Buffer.from([0xFF]));
+  cache.append(Buffer.from([0xff]));
 }
 
-cache.on('hit', timeTook => { console.log(`Cache hit! Operation time: ${timeTook}ms`); });
+cache.on('hit', timeTook => {
+  console.log(`Cache hit! Operation time: ${timeTook}ms`);
+});
 
-cache.on('miss', timeTook => { console.log(`Cache miss! Operation time: ${timeTook}ms`); });
+cache.on('miss', timeTook => {
+  console.log(`Cache miss! Operation time: ${timeTook}ms`);
+});
 
 /** First call, a cold lookup.
  *
@@ -79,7 +83,7 @@ console.log(cache.find(Buffer.from([0x33, 0x56])));
 console.log(cache.find(Buffer.from([0x33, 0x56])));
 
 for (let i = 0; i < 16; ++i) {
-    cache.append(Buffer.from([0xFF]));
+  cache.append(Buffer.from([0xff]));
 }
 
 /** Fourth call, after appending data, cache hit
@@ -113,26 +117,26 @@ tiny-toatie-cache ‹master*› % npx jest __tests__/performance/
 Test Suites: 1 passed, 1 total
 Tests:       1 passed, 1 total
 Snapshots:   0 total
-Time:        1.256s
+Time:        1.575s
 Ran all test suites matching /__tests__\/performance\//i.
 Jest did not exit one second after the test run has completed.
 
 This usually means that there are asynchronous operations that weren't stopped in your tests. Consider running Jest with `--detectOpenHandles` to troubleshoot this issue.
-  console.log __tests__/performance/hit-test.performance.js:51
-    Total time: 10.403611111111111
+  console.log __tests__/performance/hit-test.performance.js:63
+    Total time: 0.30388888888888893
 
-  console.log __tests__/performance/hit-test.performance.js:52
+  console.log __tests__/performance/hit-test.performance.js:64
     Word count:  13376
 
-  console.log __tests__/performance/hit-test.performance.js:53
-    Miss count:  5743
+  console.log __tests__/performance/hit-test.performance.js:17
+    miss count: 5743
 
-  console.log __tests__/performance/hit-test.performance.js:54
-    Miss operation avg. time:  6.475361309420164
+  console.log __tests__/performance/hit-test.performance.js:66
+    Miss operation avg. time:  0.02594462824307853
 
-  console.log __tests__/performance/hit-test.performance.js:55
-    Hit count:  34385
+  console.log __tests__/performance/hit-test.performance.js:17
+    hit count: 34385
 
-  console.log __tests__/performance/hit-test.performance.js:56
-    Hit operation avg. time:  0.0023556783481169115
+  console.log __tests__/performance/hit-test.performance.js:68
+    Hit operation avg. time:  0.0027046677330231205
 ```
