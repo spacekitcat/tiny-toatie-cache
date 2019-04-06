@@ -1,3 +1,4 @@
+import handleCacheLookup from './lookup-handlers/cache-lookup-handler';
 import handleColdLookup from './lookup-handlers/cold-lookup-handler';
 
 class Cache {
@@ -16,18 +17,21 @@ class Cache {
   }
 
   checkCache(target) {
-    const cachedResult = this.store.read(target);
+    const cachedResult = handleCacheLookup({
+      store: this.store,
+      lookupKey: target
+    });
+
     if (cachedResult) {
       this.callOn('hit', Date.now() - this.lastTimeSnapshot);
     }
+
     return cachedResult;
   }
 
   coldSearch(target) {
     const result = handleColdLookup({ store: this.store, lookupKey: target });
-
     this.callOn('miss', Date.now() - this.lastTimeSnapshot);
-
     return result;
   }
 
