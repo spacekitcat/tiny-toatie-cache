@@ -1,5 +1,6 @@
 import handleCacheLookup from './lookup-handlers/cache-lookup-handler';
 import handleColdLookup from './lookup-handlers/cold-lookup-handler';
+import LookupDispatcher from './lookup-dispatcher';
 
 class Cache {
   constructor(store) {
@@ -10,6 +11,21 @@ class Cache {
     this.store = store;
     this.events = {};
     this.lastTimeSnapshot = 0;
+    this.lookupDispatcher = new LookupDispatcher();
+    this.lookupDispatcher.registerHandler(handleCacheLookup);
+    this.lookupDispatcher.registerHandler(handleColdLookup);
+    this.lookupDispatcher.on('complete', this.onCompleteCallback.bind(this));
+  }
+
+  onCompleteCallback(handlerId) {
+    switch (handlerId) {
+      case 0:
+        this.callOn('hit', Date.now() - this.lastTimeSnapshot);
+        break;
+      case 1:
+        this.callOn('miss', Date.now() - this.lastTimeSnapshot);
+        break;
+    }
   }
 
   append(list) {
@@ -37,12 +53,10 @@ class Cache {
 
   find(target) {
     this.lastTimeSnapshot = Date.now();
-    const cacheResult = this.checkCache(target);
-    if (cacheResult) {
-      return cacheResult;
-    }
-
-    return this.coldSearch(target);
+    return this.lookupDispatcher.handleLookup({
+      store: this.store,
+      lookupKey: target
+    });
   }
 
   getInternalStore() {

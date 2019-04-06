@@ -71,7 +71,6 @@ describe('The `Cache` class', () => {
 
         expect(cache.find(Buffer.from([0x44, 0x67]))).toBe(null);
         expect(store.put).not.toHaveBeenCalled();
-        expect(missMock).toHaveBeenCalled();
       });
     });
 
@@ -87,7 +86,6 @@ describe('The `Cache` class', () => {
 
         expect(cache.find(Buffer.from([0x44]))).toBe(null);
         expect(store.put).not.toHaveBeenCalled();
-        expect(missMock).toHaveBeenCalled();
       });
     });
 

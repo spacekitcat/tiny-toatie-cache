@@ -1,6 +1,7 @@
 class LookupDispatcher {
   constructor() {
     this.handlers = [];
+    this.events = {};
   }
 
   handleLookup(event) {
@@ -9,9 +10,12 @@ class LookupDispatcher {
     }
 
     for (let i = 0; i < this.handlers.length; ++i) {
-      const handlerFn = this.handlers[i];
-      const result = handlerFn(event);
+      const result = this.handlers[i](event);
       if (result) {
+        const completeCallback = this.events['complete'];
+        if (completeCallback) {
+          completeCallback(i);
+        }
         return result;
       }
     }
@@ -21,6 +25,10 @@ class LookupDispatcher {
 
   registerHandler(handlerFn) {
     this.handlers.push(handlerFn);
+  }
+
+  on(eventKey, callbackFn) {
+    this.events[eventKey] = callbackFn;
   }
 }
 
