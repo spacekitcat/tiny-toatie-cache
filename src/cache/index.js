@@ -1,4 +1,4 @@
-import search from '../search';
+import handleColdLookup from './lookup-handlers/cold-lookup-handler';
 
 class Cache {
   constructor(store) {
@@ -24,7 +24,7 @@ class Cache {
   }
 
   coldSearch(target) {
-    const result = search(Buffer.from(this.store.getBufferCopy()), target);
+    const result = handleColdLookup({ store: this.store, lookupKey: target });
 
     if (result) {
       this.store.put(target, result.offset);
