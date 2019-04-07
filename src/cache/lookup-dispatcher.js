@@ -12,10 +12,7 @@ class LookupDispatcher {
     for (let i = 0; i < this.handlers.length; ++i) {
       const result = this.handlers[i](event);
       if (result) {
-        const completeCallback = this.events['complete'];
-        if (completeCallback) {
-          completeCallback(i);
-        }
+        this.callOn('complete', i);
         return result;
       }
     }
@@ -29,6 +26,13 @@ class LookupDispatcher {
 
   on(eventKey, callbackFn) {
     this.events[eventKey] = callbackFn;
+  }
+
+  callOn(eventKey, param) {
+    const callback = this.events[eventKey];
+    if (callback) {
+      callback(param);
+    }
   }
 }
 

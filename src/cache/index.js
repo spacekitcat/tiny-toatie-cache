@@ -32,25 +32,6 @@ class Cache {
     this.store.append(list);
   }
 
-  checkCache(target) {
-    const cachedResult = handleCacheLookup({
-      store: this.store,
-      lookupKey: target
-    });
-
-    if (cachedResult) {
-      this.callOn('hit', Date.now() - this.lastTimeSnapshot);
-    }
-
-    return cachedResult;
-  }
-
-  coldSearch(target) {
-    const result = handleColdLookup({ store: this.store, lookupKey: target });
-    this.callOn('miss', Date.now() - this.lastTimeSnapshot);
-    return result;
-  }
-
   find(target) {
     this.lastTimeSnapshot = Date.now();
     return this.lookupDispatcher.handleLookup({
