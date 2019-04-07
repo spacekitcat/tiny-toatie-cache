@@ -1,6 +1,6 @@
 {
   "name": "tiny-toatie-cache",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Prototype cache system for sliding window lookup operations",
   "main": "lib/index.js",
   "repository": "https://github.com/spacekitcat/tiny-toatie-cache",
