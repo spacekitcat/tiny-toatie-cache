@@ -13,7 +13,7 @@ class CacheStore {
   }
 
   getBufferCopy() {
-    return this.internalStore.getBufferCopy();
+    return this.internalStore.getInternalBuffer();
   }
 
   getKeyHash(key) {
