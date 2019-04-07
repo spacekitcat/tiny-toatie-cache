@@ -45,6 +45,18 @@ describe('The `lookupDispatch` module', () => {
 
         expect(lookupDispatch.handleLookup({})).toBe(null);
       });
+
+      it('should not call the complete event', () => {
+        const handler = jest.fn();
+        const completionCallBack = jest.fn();
+        handler.mockImplementation(() => null);
+        const lookupDispatch = new LookupDispatcher();
+        lookupDispatch.registerHandler(handler);
+        lookupDispatch.on('complete', completionCallBack);
+
+        lookupDispatch.handleLookup({});
+        expect(completionCallBack).not.toHaveBeenCalled();
+      });
     });
 
     describe('when the event can be handled', () => {
@@ -61,6 +73,24 @@ describe('The `lookupDispatch` module', () => {
         lookupDispatch.registerHandler(handler);
 
         expect(lookupDispatch.handleLookup({})).toMatchObject(mockResponse);
+      });
+
+      it('should call the complete event', () => {
+        const mockResponse = {
+          offset: 1,
+          length: 2,
+          value: Buffer.from([0x22])
+        };
+
+        const handler = jest.fn();
+        const completionCallBack = jest.fn();
+        handler.mockImplementation(() => mockResponse);
+        const lookupDispatch = new LookupDispatcher();
+        lookupDispatch.registerHandler(handler);
+        lookupDispatch.on('complete', completionCallBack);
+
+        lookupDispatch.handleLookup({});
+        expect(completionCallBack).toHaveBeenCalledWith(0);
       });
     });
   });
