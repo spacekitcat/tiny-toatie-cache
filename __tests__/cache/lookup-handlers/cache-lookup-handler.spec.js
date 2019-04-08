@@ -21,7 +21,7 @@ describe('The `cache-lookup-handler` module', () => {
           store: store,
           lookupKey: target
         })
-      ).toMatchObject(search(store.getBufferCopy(), target));
+      ).toMatchObject(search(store.getInternalBuffer(), target));
     });
 
     it('should have called `read` to lookup the key', () => {

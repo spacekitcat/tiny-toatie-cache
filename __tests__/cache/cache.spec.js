@@ -27,7 +27,7 @@ describe('The `Cache` class', () => {
 
       cache.append(expectedAppendData);
 
-      expect(cache.getInternalStore().getBufferCopy()).toMatchObject(
+      expect(cache.getInternalStore().getInternalBuffer()).toMatchObject(
         expectedAppendData
       );
     });
@@ -42,7 +42,7 @@ describe('The `Cache` class', () => {
       cache.append(expectedAppendDataOne);
       cache.append(expectedAppendDataTwo);
 
-      expect(cache.getInternalStore().getBufferCopy()).toMatchObject(
+      expect(cache.getInternalStore().getInternalBuffer()).toMatchObject(
         Buffer.concat([expectedAppendDataOne, expectedAppendDataTwo])
       );
     });

@@ -12,7 +12,7 @@ class CacheStore {
     this.internalStore.append(list);
   }
 
-  getBufferCopy() {
+  getInternalBuffer() {
     return this.internalStore.getInternalBuffer();
   }
 

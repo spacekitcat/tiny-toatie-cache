@@ -19,7 +19,7 @@ describe('The `ColdLookupHandler` function', () => {
           store: store,
           lookupKey: target
         })
-      ).toMatchObject(search(store.getBufferCopy(), target));
+      ).toMatchObject(search(store.getInternalBuffer(), target));
     });
 
     it('should add the positive result to the dictionary', () => {
@@ -36,7 +36,7 @@ describe('The `ColdLookupHandler` function', () => {
 
       expect(putSpy).toHaveBeenCalledWith(
         target,
-        search(store.getBufferCopy(), target).offset
+        search(store.getInternalBuffer(), target).offset
       );
     });
   });

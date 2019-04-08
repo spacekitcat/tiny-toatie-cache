@@ -5,7 +5,9 @@ describe('The `Store` class', () => {
     const sut = new CacheStore();
     const expectedAppendList = [0x45, 0x44, 0x46];
     sut.append(Buffer.from(expectedAppendList));
-    expect(sut.getBufferCopy()).toMatchObject(Buffer.from(expectedAppendList));
+    expect(sut.getInternalBuffer()).toMatchObject(
+      Buffer.from(expectedAppendList)
+    );
     expect(sut.getStoreSize()).toBe(0);
   });
 
@@ -13,7 +15,9 @@ describe('The `Store` class', () => {
     const sut = new CacheStore();
     const expectedAppendList = [0x75, 0x64, 0x26];
     sut.append(Buffer.from(expectedAppendList));
-    expect(sut.getBufferCopy()).toMatchObject(Buffer.from(expectedAppendList));
+    expect(sut.getInternalBuffer()).toMatchObject(
+      Buffer.from(expectedAppendList)
+    );
     expect(sut.getStoreSize()).toBe(0);
   });
 
