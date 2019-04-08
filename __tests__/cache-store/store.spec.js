@@ -1,4 +1,5 @@
 import CacheStore from '../../src/cache-store';
+import RecordTypeEnum from '../../src/cache-store/record-type-enum';
 
 describe('The `Store` class', () => {
   it('append method', () => {
@@ -31,6 +32,7 @@ describe('The `Store` class', () => {
       sut.put(key, 3);
 
       expect(sut.read(key)).toMatchObject({
+        type: RecordTypeEnum.POSITIVE_RESULT_OFFSET,
         value: key,
         offset: 3,
         length: 1
@@ -47,6 +49,7 @@ describe('The `Store` class', () => {
       sut.put(key, 1);
 
       expect(sut.read(key)).toMatchObject({
+        type: RecordTypeEnum.POSITIVE_RESULT_OFFSET,
         value: key,
         offset: 1,
         length: 1
@@ -63,6 +66,7 @@ describe('The `Store` class', () => {
       sut.put(key, 3);
 
       expect(sut.read(key)).toMatchObject({
+        type: RecordTypeEnum.POSITIVE_RESULT_OFFSET,
         value: key,
         offset: 3,
         length: 1
@@ -81,6 +85,7 @@ describe('The `Store` class', () => {
       sut.put(key, 3);
 
       expect(sut.read(key)).toMatchObject({
+        type: RecordTypeEnum.POSITIVE_RESULT_OFFSET,
         value: key,
         offset: 3,
         length: 2
@@ -97,6 +102,7 @@ describe('The `Store` class', () => {
       sut.put(key, 1);
 
       expect(sut.read(key)).toEqual({
+        type: RecordTypeEnum.POSITIVE_RESULT_OFFSET,
         value: key,
         offset: 1,
         length: 2
@@ -113,6 +119,7 @@ describe('The `Store` class', () => {
       sut.put(key, 1);
 
       expect(sut.read(key)).toEqual({
+        type: RecordTypeEnum.POSITIVE_RESULT_OFFSET,
         value: key,
         offset: 1,
         length: 2
@@ -130,6 +137,7 @@ describe('The `Store` class', () => {
       sut.put(key, 5);
 
       expect(sut.read(key)).toMatchObject({
+        type: RecordTypeEnum.POSITIVE_RESULT_OFFSET,
         value: key,
         offset: 5,
         length: 6
