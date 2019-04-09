@@ -1,6 +1,6 @@
 import { Proxy } from 'cloakroom-smart-buffer-proxy';
 import { metrohash64 } from 'metrohash';
-import RecordTypeEnum from './record-type-enum';
+import RecordTypeEnum from '../cache/lookup-handlers/result-source-enum';
 
 class CacheStore {
   constructor(size = 32000) {
@@ -40,7 +40,6 @@ class CacheStore {
     }
 
     return {
-      type: RecordTypeEnum.POSITIVE_RESULT_OFFSET,
       offset: res.offset,
       value: key,
       length: key.length

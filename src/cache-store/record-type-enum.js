@@ -1,4 +1,0 @@
-export default {
-  POSITIVE_RESULT_OFFSET: 0,
-  NEGATIVE_MARK_OFFSET: 1
-};
