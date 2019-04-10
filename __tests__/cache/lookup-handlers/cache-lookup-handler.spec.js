@@ -1,6 +1,7 @@
 import handleCacheLookup from '../../../src/cache/lookup-handlers/cache-lookup-handler';
 import CacheStore from '../../../src/cache-store';
 import search from '../../../src/search';
+import ResultSourceEnum from '../../../src/cache/lookup-handlers/result-source-enum';
 
 const createStoreInstance = contents => {
   const store = new CacheStore();
@@ -21,7 +22,11 @@ describe('The `cache-lookup-handler` module', () => {
           store: store,
           lookupKey: target
         })
-      ).toMatchObject(search(store.getInternalBuffer(), target));
+      ).toMatchObject(
+        Object.assign(search(store.getInternalBuffer(), target), {
+          handler_type: ResultSourceEnum.CACHE_LOOKUP_HANDLER
+        })
+      );
     });
 
     it('should have called `read` to lookup the key', () => {

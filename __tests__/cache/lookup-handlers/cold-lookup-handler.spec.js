@@ -1,6 +1,7 @@
 import handleColdLookup from '../../../src/cache/lookup-handlers/cold-lookup-handler';
 import CacheStore from '../../../src/cache-store';
 import search from '../../../src/search';
+import ResultSourceEnum from '../../../src/cache/lookup-handlers/result-source-enum';
 
 const createStoreInstance = contents => {
   const store = new CacheStore();
@@ -19,7 +20,11 @@ describe('The `ColdLookupHandler` function', () => {
           store: store,
           lookupKey: target
         })
-      ).toMatchObject(search(store.getInternalBuffer(), target));
+      ).toMatchObject(
+        Object.assign(search(store.getInternalBuffer(), target), {
+          handler_type: ResultSourceEnum.COLD_LOOKUP_HANDLER
+        })
+      );
     });
 
     it('should add the positive result to the dictionary', () => {
