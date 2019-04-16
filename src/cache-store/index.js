@@ -4,7 +4,6 @@ import RecordTypeEnum from '../cache/lookup-handlers/result-source-enum';
 
 class CacheStore {
   constructor(size = 32000) {
-    this.offset = 0;
     this.internalStore = new Proxy(size);
     this.store = {};
   }
@@ -21,9 +20,9 @@ class CacheStore {
     return metrohash64(key, 918298938);
   }
 
-  put(key, offset) {
+  put(key, offset, metadata) {
     const ticket = this.internalStore.createTicket(offset);
-    this.store[this.getKeyHash(key)] = { ticket };
+    this.store[this.getKeyHash(key)] = { ticket, metadata };
   }
 
   read(key) {
@@ -39,10 +38,12 @@ class CacheStore {
       return null;
     }
 
+    const { metadata } = cacheHit;
     return {
       offset: res.offset,
       value: key,
-      length: key.length
+      length: key.length,
+      metadata
     };
   }
 

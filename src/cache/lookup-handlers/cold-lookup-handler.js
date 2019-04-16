@@ -7,6 +7,14 @@ export default request => {
 
   if (searchResult) {
     store.put(lookupKey, searchResult.offset);
+    for (let i = 0; i < lookupKey.length - 1; ++i) {
+      store.put(
+        lookupKey.slice(0, lookupKey.length - 1 - i),
+        searchResult.offset
+      );
+      //cache.find(buffer.slice(0, i));
+      //cache.find(buffer.slice(buffer.length - i - 1, buffer.length - 1));
+    }
   }
 
   return searchResult

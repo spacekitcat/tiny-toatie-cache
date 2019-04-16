@@ -19,7 +19,7 @@ const printStat = key => {
 
 describe('A spectre haunts Europe, the spectre of communism', () => {
   it('hit/miss efficiency test', () => {
-    let store = new CacheStore(2000000);
+    let store = new CacheStore(64000);
     let cache = new Cache(store);
     let hitTimeAvg = 0;
     let missTimeAvg = 0;
@@ -37,7 +37,7 @@ describe('A spectre haunts Europe, the spectre of communism', () => {
     });
 
     const readStream = fs.createReadStream(
-      path.join(__dirname, 'the-communist-manifesto.txt')
+      path.join(__dirname, 'war-and-peace.txt')
     );
     let fileWriteStream = fs.createWriteStream('/dev/null');
 
@@ -50,6 +50,10 @@ describe('A spectre haunts Europe, the spectre of communism', () => {
 
         const buffer = chunk.slice(bufferOffsetStart, i);
         cache.append(buffer);
+
+        // buffer.forEach(byte => {
+        //cache.find(Buffer.from([byte]));
+        // });
         cache.find(buffer);
         cache.find(buffer);
         cache.find(buffer);
