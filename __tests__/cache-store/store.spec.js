@@ -121,7 +121,7 @@ describe('The `Store` class', () => {
     });
   });
 
-  describe('A key `length` which check that an object, not an array, is the underlying store', () => {
+  describe('A key `length` verifies that a object, not an array, is the underlying store', () => {
     it('should put and retrieve as expected', () => {
       const sut = new CacheStore();
       const key = Buffer.from([0x6c, 0x65, 0x6e, 0x67, 0x74, 0x68]);
