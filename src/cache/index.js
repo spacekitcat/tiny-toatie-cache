@@ -32,8 +32,18 @@ class Cache {
     this.store.append(list);
   }
 
-  find(target) {
+  find(target, bypassCache = false) {
     this.lastTimeSnapshot = Date.now();
+
+    if (bypassCache) {
+      const result = handleColdLookup({
+        store: this.store,
+        lookupKey: target
+      });
+      this.onCompleteCallback(1);
+      return result;
+    }
+
     return this.lookupDispatcher.handleLookup({
       store: this.store,
       lookupKey: target

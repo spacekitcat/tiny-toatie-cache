@@ -136,6 +136,35 @@ describe('The `Cache` class', () => {
         expect(hitMock).toHaveBeenCalled();
       });
     });
+
+    describe('and the bypass cache option is specified', () => {
+      it('should not hit the cache', () => {
+        const expectedSearchTerm = Buffer.from([0x54]);
+        const store = new CacheStore();
+        const hitMock = jest.fn();
+        const missMock = jest.fn();
+        const spy = jest.spyOn(store, 'read');
+        const cache = instantiate(store);
+
+        cache.append(expectedSearchTerm);
+        cache.on('hit', hitMock);
+        cache.on('miss', missMock);
+
+        expect(cache.find(expectedSearchTerm, true)).toMatchObject(
+          Object.assign(search(expectedSearchTerm, expectedSearchTerm), {
+            value: expectedSearchTerm
+          })
+        );
+        expect(cache.find(expectedSearchTerm, true)).toMatchObject(
+          Object.assign(search(expectedSearchTerm, expectedSearchTerm), {
+            value: expectedSearchTerm
+          })
+        );
+        expect(spy).not.toHaveBeenCalledWith(expectedSearchTerm);
+        expect(hitMock).not.toHaveBeenCalled();
+        expect(missMock).toHaveBeenCalled();
+      });
+    });
   });
 
   describe('the find method is ran with a two element store', () => {});
