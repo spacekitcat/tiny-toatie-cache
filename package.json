@@ -16,17 +16,19 @@
     "@babel/core": "^7.2.2",
     "@babel/preset-env": "^7.3.1",
     "babel-jest": "^24.0.0",
-    "jest": "^24.0.0"
+    "jest": "^24.0.0",
+    "random-words": "^1.1.0",
+    "statman-stopwatch": "^2.8.2"
   },
   "scripts": {
     "babel": "babel src/ --out-dir lib/ --source-maps",
     "test": "jest .spec.js --coverage",
-    "prebuild": "npm run babel",
-    "build": "npm run test",
+    "build": "npm run babel",
     "prepublish": "npm run build"
   },
   "dependencies": {
     "cloakroom-smart-buffer-proxy": "^3.0.2",
-    "metrohash": "^2.5.1"
+    "metrohash": "^2.5.1",
+    "split": "^1.0.1"
   }
 }

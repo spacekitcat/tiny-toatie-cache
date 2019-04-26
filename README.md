@@ -104,39 +104,28 @@ Cache hit! Operation time: 0ms
 
 ## Performance
 
-`hit-test.js` reads, appends and then performs a search for words read sequntially from a text file. When the test completes, it summarises the number of words processed, how often it hits, misses and the average time took for each operation type.
+`driving-range-test.js` test scenario by generating a set (the exact number is controlled by `input_key_count`) of random words, appends them to the cache and then, from the generated words, it repeatedly selects a random word and performs a search (The exact number is whatever `number_of_search_attempts` is set to).
+
+It performs one test with the cache off as a control, then it performs another with the cache enabled. Both experiments are timed and the all of the setup displayed.
 
 ```bash
-tiny-toatie-cache ‹master*› % npx jest __tests__/performance/
+tiny-toatie-cache/performance ‹master*› % node driving-range-test.js
 
+Cache hits: 0, Cache misses: 1000000
+Experiment control configuration:
+{ input_key_count: 2560,
+  dictionary_size: 256000,
+  words_per_key: 3,
+  number_of_search_attempts: 1000000,
+  cache_bypass: true }
+Experiment control time: 11389.313129999999
 
- PASS  __tests__/performance/hit-test.performance.js
-  A spectre haunts Europe, the spectre of communism
-    ✓ hit/miss efficiency test (2ms)
-
-Test Suites: 1 passed, 1 total
-Tests:       1 passed, 1 total
-Snapshots:   0 total
-Time:        1.575s
-Ran all test suites matching /__tests__\/performance\//i.
-Jest did not exit one second after the test run has completed.
-
-This usually means that there are asynchronous operations that weren't stopped in your tests. Consider running Jest with `--detectOpenHandles` to troubleshoot this issue.
-  console.log __tests__/performance/hit-test.performance.js:63
-    Total time: 0.30388888888888893
-
-  console.log __tests__/performance/hit-test.performance.js:64
-    Word count:  13376
-
-  console.log __tests__/performance/hit-test.performance.js:17
-    miss count: 5743
-
-  console.log __tests__/performance/hit-test.performance.js:66
-    Miss operation avg. time:  0.02594462824307853
-
-  console.log __tests__/performance/hit-test.performance.js:17
-    hit count: 34385
-
-  console.log __tests__/performance/hit-test.performance.js:68
-    Hit operation avg. time:  0.0027046677330231205
+Cache hits: 997440, Cache misses: 2560
+Experiment subject configuration:
+{ input_key_count: 2560,
+  dictionary_size: 256000,
+  words_per_key: 3,
+  number_of_search_attempts: 1000000,
+  cache_bypass: false }
+Experiment subject time: 1054.6606279999996
 ```
