@@ -94,4 +94,50 @@ describe('The `lookupDispatch` module', () => {
       });
     });
   });
+
+  describe('when one handler is registered', () => {
+    describe('and the first handler can handle it', () => {
+      it('should only call the first handler', () => {
+        const event = {
+          store: createStoreInstance(Buffer.from([0x22, 0x43, 0x87])),
+          lookupKey: Buffer.from([0x43, 0x87])
+        };
+
+        const handlerOne = jest.fn();
+        handlerOne.mockImplementation(() => 'FAKE');
+
+        const handlerTwo = jest.fn();
+        const lookupDispatch = new LookupDispatcher();
+        lookupDispatch.registerHandler(handlerOne);
+        lookupDispatch.registerHandler(handlerTwo);
+
+        lookupDispatch.handleLookup(event);
+
+        expect(handlerOne).toHaveBeenCalledWith(event);
+        expect(handlerTwo).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('and the first handler cannot handle it', () => {
+      it('should call both handlers', () => {
+        const event = {
+          store: createStoreInstance(Buffer.from([0x22, 0x43, 0x87])),
+          lookupKey: Buffer.from([0x43, 0x87])
+        };
+
+        const handlerOne = jest.fn();
+        handlerOne.mockImplementation(() => null);
+
+        const handlerTwo = jest.fn();
+        const lookupDispatch = new LookupDispatcher();
+        lookupDispatch.registerHandler(handlerOne);
+        lookupDispatch.registerHandler(handlerTwo);
+
+        lookupDispatch.handleLookup(event);
+
+        expect(handlerOne).toHaveBeenCalledWith(event);
+        expect(handlerTwo).toHaveBeenCalledWith(event);
+      });
+    });
+  });
 });
