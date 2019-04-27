@@ -49,36 +49,38 @@ const performTest = ({
   console.log(`Cache hits: ${hits}, Cache misses: ${misses}`);
 };
 
-const stopwatch = new Stopwatch();
+const executeAndTimeTestDecorator = (testLabel, testConfiguration) => {
+  const stopwatch = new Stopwatch();
+
+  console.log();
+  console.log(`Test label: ${testLabel}`);
+  stopwatch.start();
+  performTest(testConfiguration);
+  stopwatch.stop();
+  console.log('Experiment configuration:');
+  console.log(testConfiguration);
+  console.log(`Experiment time taken: ${stopwatch.read()}`);
+  console.log();
+  stopwatch.reset();
+};
 
 const coreConfiguration = {
   input_key_count: 2560,
-  dictionary_size: 256000,
+  dictionary_size: 2560000,
   words_per_key: 3,
   number_of_search_attempts: 1000000
 };
 
-stopwatch.start();
-const experimentControl = Object.assign({}, coreConfiguration, {
-  cache_bypass: true
-});
-console.log();
-performTest(experimentControl);
-stopwatch.stop();
-console.log('Experiment control configuration:');
-console.log(experimentControl);
-console.log(`Experiment control time: ${stopwatch.read()}`);
+const experimentControl = executeAndTimeTestDecorator(
+  'Control experiment (cache disabled)',
+  Object.assign({}, coreConfiguration, {
+    cache_bypass: true
+  })
+);
 
-console.log();
-
-stopwatch.reset();
-stopwatch.start();
-const experimentSubject = Object.assign({}, coreConfiguration, {
-  cache_bypass: false
-});
-performTest(experimentSubject);
-stopwatch.stop();
-console.log('Experiment subject configuration:');
-console.log(experimentSubject);
-console.log(`Experiment subject time: ${stopwatch.read()}`);
-console.log();
+executeAndTimeTestDecorator(
+  'Cache enabled experiment',
+  Object.assign({}, coreConfiguration, {
+    cache_bypass: false
+  })
+);

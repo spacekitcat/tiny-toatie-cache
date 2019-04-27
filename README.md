@@ -111,21 +111,25 @@ It performs one test with the cache off as a control, then it performs another w
 ```bash
 tiny-toatie-cache/performance ‹master*› % node driving-range-test.js
 
+Test label: Control experiment (cache disabled)
 Cache hits: 0, Cache misses: 1000000
-Experiment control configuration:
+Experiment configuration:
 { input_key_count: 2560,
-  dictionary_size: 256000,
+  dictionary_size: 2560000,
   words_per_key: 3,
   number_of_search_attempts: 1000000,
   cache_bypass: true }
-Experiment control time: 11389.313129999999
+Experiment time taken: 10686.166241
 
+
+Test label: Cache enabled experiment
 Cache hits: 997440, Cache misses: 2560
-Experiment subject configuration:
+Experiment configuration:
 { input_key_count: 2560,
-  dictionary_size: 256000,
+  dictionary_size: 2560000,
   words_per_key: 3,
   number_of_search_attempts: 1000000,
   cache_bypass: false }
-Experiment subject time: 1054.6606279999996
+Experiment time taken: 1001.0715529999998
+
 ```
