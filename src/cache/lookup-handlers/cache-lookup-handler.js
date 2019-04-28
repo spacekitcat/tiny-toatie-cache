@@ -1,12 +1,19 @@
 import ResultSourceEnum from './result-source-enum';
+import HandlerResponseEnum from './handler-response-enum';
 
 export default request => {
   const { store, lookupKey } = request;
-  const result = store.read(lookupKey);
+  const cacheResult = store.read(lookupKey);
 
-  return result
-    ? Object.assign(result, {
-        handler_type: ResultSourceEnum.CACHE_LOOKUP_HANDLER
-      })
-    : null;
+  const result = cacheResult || null;
+
+  const responseType = result
+    ? HandlerResponseEnum.HANDLED_COMPLETE
+    : HandlerResponseEnum.UNHANDLED;
+
+  return {
+    result,
+    handler_type: ResultSourceEnum.CACHE_LOOKUP_HANDLER,
+    response_type: responseType
+  };
 };

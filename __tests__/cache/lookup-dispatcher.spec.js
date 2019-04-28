@@ -1,5 +1,6 @@
 import LookupDispatcher from '../../src/cache/lookup-dispatcher';
 import CacheStore from '../../src/cache-store';
+import HandlerResponseType from '../../src/cache/lookup-handlers/handler-response-enum';
 
 const createStoreInstance = contents => {
   const store = new CacheStore();
@@ -28,6 +29,10 @@ describe('The `lookupDispatch` module', () => {
       };
 
       const handler = jest.fn();
+      handler.mockImplementation(() => ({
+        result: {},
+        response_type: HandlerResponseType.HANDLED_COMPLETE
+      }));
       const lookupDispatch = new LookupDispatcher();
       lookupDispatch.registerHandler(handler);
 
@@ -36,10 +41,13 @@ describe('The `lookupDispatch` module', () => {
       expect(handler).toHaveBeenCalledWith(event);
     });
 
-    describe('when the event cannot be handled', () => {
+    describe('when the event is `UNHANDLED`', () => {
       it('should return null', () => {
         const handler = jest.fn();
-        handler.mockImplementation(() => null);
+        handler.mockImplementation(() => ({
+          result: null,
+          response_type: HandlerResponseType.UNHANDLED
+        }));
         const lookupDispatch = new LookupDispatcher();
         lookupDispatch.registerHandler(handler);
 
@@ -49,7 +57,10 @@ describe('The `lookupDispatch` module', () => {
       it('should not call the complete event', () => {
         const handler = jest.fn();
         const completionCallBack = jest.fn();
-        handler.mockImplementation(() => null);
+        handler.mockImplementation(() => ({
+          result: null,
+          response_type: HandlerResponseType.UNHANDLED
+        }));
         const lookupDispatch = new LookupDispatcher();
         lookupDispatch.registerHandler(handler);
         lookupDispatch.on('complete', completionCallBack);
@@ -59,12 +70,15 @@ describe('The `lookupDispatch` module', () => {
       });
     });
 
-    describe('when the event can be handled', () => {
+    describe('when the event is `HANDLED_COMPLETE`', () => {
       it('should return the handler response', () => {
         const mockResponse = {
-          offset: 1,
-          length: 2,
-          value: Buffer.from([0x22])
+          response_type: HandlerResponseType.HANDLED_COMPLETE,
+          result: {
+            offset: 1,
+            length: 2,
+            value: Buffer.from([0x22])
+          }
         };
 
         const handler = jest.fn();
@@ -72,14 +86,19 @@ describe('The `lookupDispatch` module', () => {
         const lookupDispatch = new LookupDispatcher();
         lookupDispatch.registerHandler(handler);
 
-        expect(lookupDispatch.handleLookup({})).toMatchObject(mockResponse);
+        expect(lookupDispatch.handleLookup({})).toMatchObject(
+          mockResponse.result
+        );
       });
 
       it('should call the complete event', () => {
         const mockResponse = {
-          offset: 1,
-          length: 2,
-          value: Buffer.from([0x22])
+          result: {
+            offset: 1,
+            length: 2,
+            value: Buffer.from([0x22])
+          },
+          response_type: HandlerResponseType.HANDLED_COMPLETE
         };
 
         const handler = jest.fn();
@@ -93,10 +112,26 @@ describe('The `lookupDispatch` module', () => {
         expect(completionCallBack).toHaveBeenCalledWith(0);
       });
     });
+
+    describe('when the event is `HANDLED_ABORT`', () => {
+      it('should return the handler response', () => {
+        const mockResponse = {
+          response_type: HandlerResponseType.HANDLED_ABORT,
+          result: null
+        };
+
+        const handler = jest.fn();
+        handler.mockImplementation(() => mockResponse);
+        const lookupDispatch = new LookupDispatcher();
+        lookupDispatch.registerHandler(handler);
+
+        expect(lookupDispatch.handleLookup({})).toBe(mockResponse.result);
+      });
+    });
   });
 
-  describe('when one handler is registered', () => {
-    describe('and the first handler can handle it', () => {
+  describe('when two handlers are registered', () => {
+    describe('and the first handler is `HANDLED_COMPLETE`', () => {
       it('should only call the first handler', () => {
         const event = {
           store: createStoreInstance(Buffer.from([0x22, 0x43, 0x87])),
@@ -104,21 +139,26 @@ describe('The `lookupDispatch` module', () => {
         };
 
         const handlerOne = jest.fn();
-        handlerOne.mockImplementation(() => 'FAKE');
+        const expectedResult = 'FAKE';
+        handlerOne.mockImplementation(() => ({
+          result: expectedResult,
+          response_type: HandlerResponseType.HANDLED_COMPLETE
+        }));
 
         const handlerTwo = jest.fn();
         const lookupDispatch = new LookupDispatcher();
         lookupDispatch.registerHandler(handlerOne);
         lookupDispatch.registerHandler(handlerTwo);
 
-        lookupDispatch.handleLookup(event);
+        const result = lookupDispatch.handleLookup(event);
 
+        expect(result).toBe(expectedResult);
         expect(handlerOne).toHaveBeenCalledWith(event);
         expect(handlerTwo).not.toHaveBeenCalled();
       });
     });
 
-    describe('and the first handler cannot handle it', () => {
+    describe('and the first handler is `UNHANDLED`', () => {
       it('should call both handlers', () => {
         const event = {
           store: createStoreInstance(Buffer.from([0x22, 0x43, 0x87])),
@@ -126,17 +166,53 @@ describe('The `lookupDispatch` module', () => {
         };
 
         const handlerOne = jest.fn();
-        handlerOne.mockImplementation(() => null);
+        handlerOne.mockImplementation(() => ({
+          result: null,
+          response_type: HandlerResponseType.UNHANDLED
+        }));
+
+        const handlerTwo = jest.fn();
+        const expectedResult = 'hello.';
+        handlerTwo.mockImplementation(() => ({
+          result: expectedResult,
+          response_type: HandlerResponseType.HANDLED_COMPLETE
+        }));
+
+        const lookupDispatch = new LookupDispatcher();
+        lookupDispatch.registerHandler(handlerOne);
+        lookupDispatch.registerHandler(handlerTwo);
+
+        const result = lookupDispatch.handleLookup(event);
+
+        expect(result).toBe(expectedResult);
+        expect(handlerOne).toHaveBeenCalledWith(event);
+        expect(handlerTwo).toHaveBeenCalledWith(event);
+      });
+    });
+
+    describe('and the first handler is `HANDLED_ABORT`', () => {
+      it('should only call the first handler', () => {
+        const event = {
+          store: createStoreInstance(Buffer.from([0x22, 0x43, 0x87])),
+          lookupKey: Buffer.from([0x43, 0x87])
+        };
+
+        const handlerOne = jest.fn();
+        handlerOne.mockImplementation(() => ({
+          result: null,
+          response_type: HandlerResponseType.HANDLED_ABORT
+        }));
 
         const handlerTwo = jest.fn();
         const lookupDispatch = new LookupDispatcher();
         lookupDispatch.registerHandler(handlerOne);
         lookupDispatch.registerHandler(handlerTwo);
 
-        lookupDispatch.handleLookup(event);
+        const result = lookupDispatch.handleLookup(event);
 
+        expect(result).toBe(null);
         expect(handlerOne).toHaveBeenCalledWith(event);
-        expect(handlerTwo).toHaveBeenCalledWith(event);
+        expect(handlerTwo).not.toHaveBeenCalled();
       });
     });
   });

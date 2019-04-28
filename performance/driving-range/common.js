@@ -1,4 +1,4 @@
-const ToatieCache = require('../lib/index');
+const ToatieCache = require('../../lib/index');
 const generateRandomWord = require('random-words');
 const Stopwatch = require('statman-stopwatch');
 
@@ -22,12 +22,21 @@ const performTest = ({
   dictionary_size,
   words_per_key,
   number_of_search_attempts,
+  only_dictionary_search_queries,
   cache_bypass
 }) => {
   const cache = ToatieCache.build(dictionary_size, {
     cache_bypass
   });
-  const cachedKeys = populateCache(cache, { input_key_count, words_per_key });
+  let cachedKeys = populateCache(cache, { input_key_count, words_per_key });
+
+  if (!only_dictionary_search_queries) {
+    cachedKeys = generateRandomWord({
+      exactly: input_key_count,
+      wordsPerString: words_per_key,
+      separator: ''
+    });
+  }
 
   let hits = 0;
   cache.on('hit', () => {
@@ -49,7 +58,7 @@ const performTest = ({
   console.log(`Cache hits: ${hits}, Cache misses: ${misses}`);
 };
 
-const executeAndTimeTestDecorator = (testLabel, testConfiguration) => {
+const testRunner = (testLabel, testConfiguration) => {
   const stopwatch = new Stopwatch();
 
   console.log();
@@ -64,23 +73,4 @@ const executeAndTimeTestDecorator = (testLabel, testConfiguration) => {
   stopwatch.reset();
 };
 
-const coreConfiguration = {
-  input_key_count: 2560,
-  dictionary_size: 2560000,
-  words_per_key: 3,
-  number_of_search_attempts: 1000000
-};
-
-const experimentControl = executeAndTimeTestDecorator(
-  'Control experiment (cache disabled)',
-  Object.assign({}, coreConfiguration, {
-    cache_bypass: true
-  })
-);
-
-executeAndTimeTestDecorator(
-  'Cache enabled experiment',
-  Object.assign({}, coreConfiguration, {
-    cache_bypass: false
-  })
-);
+module.exports = testRunner;

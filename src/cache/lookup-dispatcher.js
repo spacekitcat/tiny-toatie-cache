@@ -1,3 +1,5 @@
+import HandlerResponseType from './lookup-handlers/handler-response-enum';
+
 class LookupDispatcher {
   constructor() {
     this.handlers = [];
@@ -11,9 +13,16 @@ class LookupDispatcher {
 
     for (let i = 0; i < this.handlers.length; ++i) {
       const result = this.handlers[i](event);
-      if (result) {
-        this.callOn('complete', i);
-        return result;
+      switch (result['response_type']) {
+        case HandlerResponseType.HANDLED_COMPLETE:
+          this.callOn('complete', i);
+          return result.result;
+
+        case HandlerResponseType.HANDLED_ABORT:
+          return null;
+
+        case HandlerResponseType.UNHANDLED:
+          continue;
       }
     }
 

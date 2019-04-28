@@ -41,7 +41,7 @@ class Cache {
         lookupKey: target
       });
       this.onCompleteCallback(1);
-      return result;
+      return result.result;
     }
 
     return this.lookupDispatcher.handleLookup({

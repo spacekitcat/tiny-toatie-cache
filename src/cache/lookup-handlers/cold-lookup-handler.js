@@ -1,5 +1,6 @@
 import search from '../../search';
 import ResultSourceEnum from './result-source-enum';
+import HandlerResponseEnum from './handler-response-enum';
 
 export default request => {
   const { store, lookupKey } = request;
@@ -9,9 +10,15 @@ export default request => {
     store.put(lookupKey, searchResult.offset);
   }
 
-  return searchResult
-    ? Object.assign(searchResult, {
-        handler_type: ResultSourceEnum.COLD_LOOKUP_HANDLER
-      })
-    : null;
+  const result = searchResult ? searchResult : null;
+
+  const responseType = searchResult
+    ? HandlerResponseEnum.HANDLED_COMPLETE
+    : HandlerResponseEnum.UNHANDLED;
+
+  return {
+    result,
+    response_type: responseType,
+    handler_type: ResultSourceEnum.COLD_LOOKUP_HANDLER
+  };
 };

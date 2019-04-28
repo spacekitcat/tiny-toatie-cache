@@ -104,12 +104,14 @@ Cache hit! Operation time: 0ms
 
 ## Performance
 
-`driving-range-test.js` test scenario by generating a set (the exact number is controlled by `input_key_count`) of random words, appends them to the cache and then, from the generated words, it repeatedly selects a random word and performs a search (The exact number is whatever `number_of_search_attempts` is set to).
+`driving-range-test.js` tests scenarios by generating a set (the exact number is controlled by `input_key_count`) of random words, appends them to the cache and then performs a set of search queries against the cache. `number_of_search_attempts` controls the number of queries it makes and `only_dictionary_search_queries` controls whether or not it it uses words it knows are in the dictionary, or if it uses random words.
 
 It performs one test with the cache off as a control, then it performs another with the cache enabled. Both experiments are timed and the all of the setup displayed.
 
+`cache-on-vs-cache-off-no-negative-queries.js`
+
 ```bash
-tiny-toatie-cache/performance ‹master*› % node driving-range-test.js
+tiny-toatie-cache ‹master*› % node performance/driving-range/cache-on-vs-cache-off-no-negative-queries.js
 
 Test label: Control experiment (cache disabled)
 Cache hits: 0, Cache misses: 1000000
@@ -117,6 +119,7 @@ Experiment configuration:
 { input_key_count: 2560,
   dictionary_size: 2560000,
   words_per_key: 3,
+  only_dictionary_search_queries: true,
   number_of_search_attempts: 1000000,
   cache_bypass: true }
 Experiment time taken: 10686.166241
@@ -128,8 +131,39 @@ Experiment configuration:
 { input_key_count: 2560,
   dictionary_size: 2560000,
   words_per_key: 3,
+  only_dictionary_search_queries: true,
   number_of_search_attempts: 1000000,
   cache_bypass: false }
 Experiment time taken: 1001.0715529999998
+
+```
+
+`cache-on-vs-cache-off-randomised-queries.js`
+
+```bash
+tiny-toatie-cache ‹master*› % node performance/driving-range/cache-on-vs-cache-off-randomised-queries.js
+
+Test label: Control experiment (cache disabled)
+Cache hits: 0, Cache misses: 1000000
+Experiment configuration:
+{ input_key_count: 2560,
+  dictionary_size: 2560000,
+  words_per_key: 3,
+  only_dictionary_search_queries: false,
+  number_of_search_attempts: 1000000,
+  cache_bypass: true }
+Experiment time taken: 19688.572323999997
+
+
+Test label: Cache enabled experiment
+Cache hits: 0, Cache misses: 0
+Experiment configuration:
+{ input_key_count: 2560,
+  dictionary_size: 2560000,
+  words_per_key: 3,
+  only_dictionary_search_queries: false,
+  number_of_search_attempts: 1000000,
+  cache_bypass: false }
+Experiment time taken: 20715.121002000004
 
 ```

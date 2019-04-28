@@ -2,6 +2,7 @@ import handleColdLookup from '../../../src/cache/lookup-handlers/cold-lookup-han
 import CacheStore from '../../../src/cache-store';
 import search from '../../../src/search';
 import ResultSourceEnum from '../../../src/cache/lookup-handlers/result-source-enum';
+import HandlerResponseEnum from '../../../src/cache/lookup-handlers/handler-response-enum';
 
 const createStoreInstance = contents => {
   const store = new CacheStore();
@@ -20,11 +21,11 @@ describe('The `ColdLookupHandler` function', () => {
           store: store,
           lookupKey: target
         })
-      ).toMatchObject(
-        Object.assign(search(store.getInternalBuffer(), target), {
-          handler_type: ResultSourceEnum.COLD_LOOKUP_HANDLER
-        })
-      );
+      ).toMatchObject({
+        result: search(store.getInternalBuffer(), target),
+        handler_type: ResultSourceEnum.COLD_LOOKUP_HANDLER,
+        response_type: HandlerResponseEnum.HANDLED_COMPLETE
+      });
     });
 
     it('should add the positive result to the dictionary', () => {
@@ -55,7 +56,10 @@ describe('The `ColdLookupHandler` function', () => {
           store: store,
           lookupKey: target
         })
-      ).toBe(null);
+      ).toMatchObject({
+        result: null,
+        response_type: HandlerResponseEnum.UNHANDLED
+      });
     });
   });
 });
