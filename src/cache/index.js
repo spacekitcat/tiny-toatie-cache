@@ -54,6 +54,10 @@ class Cache {
     return this.store;
   }
 
+  getLength() {
+    return this.getInternalStore().getInternalBuffer().length;
+  }
+
   on(eventKey, eventFn) {
     this.events[eventKey] = eventFn;
   }

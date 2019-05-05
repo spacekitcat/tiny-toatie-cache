@@ -18,6 +18,13 @@ describe('The `Cache` class', () => {
 
       expect(cache.getInternalStore()).toBe(store);
     });
+
+    it('should have an internal size of `0`', () => {
+      const store = new CacheStore();
+      const cache = instantiate(store);
+
+      expect(cache.getLength()).toBe(0);
+    });
   });
 
   describe('data is appended to the cache', () => {
@@ -30,6 +37,15 @@ describe('The `Cache` class', () => {
       expect(cache.getInternalStore().getInternalBuffer()).toMatchObject(
         expectedAppendData
       );
+    });
+
+    it('should have an internal size of `0`', () => {
+      const expectedAppendData = Buffer.from([0x66]);
+      const cache = instantiate();
+
+      cache.append(expectedAppendData);
+
+      expect(cache.getLength()).toBe(1);
     });
   });
 
