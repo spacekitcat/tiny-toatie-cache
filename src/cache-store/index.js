@@ -11,6 +11,9 @@ class CacheStore {
 
   append(list) {
     this.internalStore.append(list);
+    list.forEach((key, index) => {
+      this.put(Buffer.from([key]), list.length - 1 - index);
+    });
   }
 
   getInternalBuffer() {

@@ -3,7 +3,7 @@ const testRunner = require('./common');
 const coreConfiguration = {
   input_key_count: 2560,
   dictionary_size: 2560000,
-  words_per_key: 3,
+  words_per_key: 2,
   only_dictionary_search_queries: false,
   number_of_search_attempts: 1000000
 };

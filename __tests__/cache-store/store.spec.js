@@ -8,7 +8,7 @@ describe('The `Store` class', () => {
     expect(sut.getInternalBuffer()).toMatchObject(
       Buffer.from(expectedAppendList)
     );
-    expect(sut.getStoreSize()).toBe(0);
+    expect(sut.getStoreSize()).toBe(3);
   });
 
   it('append method (alt)', () => {
@@ -18,7 +18,7 @@ describe('The `Store` class', () => {
     expect(sut.getInternalBuffer()).toMatchObject(
       Buffer.from(expectedAppendList)
     );
-    expect(sut.getStoreSize()).toBe(0);
+    expect(sut.getStoreSize()).toBe(3);
   });
 
   describe('An existing single-byte key is put and retrieved', () => {
@@ -35,7 +35,7 @@ describe('The `Store` class', () => {
         offset: 3,
         length: 1
       });
-      expect(sut.getStoreSize()).toBe(1);
+      expect(sut.getStoreSize()).toBe(6);
     });
 
     it('should put and retrieve as expected (alt)', () => {
@@ -51,7 +51,7 @@ describe('The `Store` class', () => {
         offset: 1,
         length: 1
       });
-      expect(sut.getStoreSize()).toBe(1);
+      expect(sut.getStoreSize()).toBe(6);
     });
 
     it('should call the on `hit` handler', () => {
@@ -67,7 +67,7 @@ describe('The `Store` class', () => {
         offset: 3,
         length: 1
       });
-      expect(sut.getStoreSize()).toBe(1);
+      expect(sut.getStoreSize()).toBe(6);
     });
   });
 
@@ -85,7 +85,7 @@ describe('The `Store` class', () => {
         offset: 3,
         length: 2
       });
-      expect(sut.getStoreSize()).toBe(1);
+      expect(sut.getStoreSize()).toBe(7);
     });
 
     it('should put and retrieve as expected (alt 1)', () => {
@@ -101,7 +101,7 @@ describe('The `Store` class', () => {
         offset: 1,
         length: 2
       });
-      expect(sut.getStoreSize()).toBe(1);
+      expect(sut.getStoreSize()).toBe(7);
     });
 
     it('should put and retrieve as expected (alt 2)', () => {
@@ -117,7 +117,7 @@ describe('The `Store` class', () => {
         offset: 1,
         length: 2
       });
-      expect(sut.getStoreSize()).toBe(1);
+      expect(sut.getStoreSize()).toBe(4);
     });
   });
 
@@ -134,7 +134,7 @@ describe('The `Store` class', () => {
         offset: 5,
         length: 6
       });
-      expect(sut.getStoreSize()).toBe(1);
+      expect(sut.getStoreSize()).toBe(7);
     });
   });
 
@@ -146,7 +146,7 @@ describe('The `Store` class', () => {
       sut.append(Buffer.from(expectedAppendList));
 
       expect(sut.read(key)).toBe(null);
-      expect(sut.getStoreSize()).toBe(0);
+      expect(sut.getStoreSize()).toBe(6);
     });
   });
 
@@ -159,7 +159,24 @@ describe('The `Store` class', () => {
       sut.append(Buffer.from([0x23, 0x33, 0x44, 0x55, 0x66, 0x77]));
 
       expect(sut.read(key)).toBe(null);
-      expect(sut.getStoreSize()).toBe(0);
+      expect(sut.getStoreSize()).toBe(12);
+    });
+  });
+
+  describe('Lazy indexing of each first character', () => {
+    it('should return `null`', () => {
+      const sut = new CacheStore(6);
+      const appendParam = Buffer.from([0x01, 0x02, 0x03]);
+      sut.append(appendParam);
+
+      appendParam.forEach((item, index) => {
+        expect(sut.read(Buffer.from([item])))
+          .toMatchObject(
+            {
+              "length": 1, "offset": appendParam.length - 1 - index, "value": Buffer.from([item])
+            }
+          );
+      });
     });
   });
 });

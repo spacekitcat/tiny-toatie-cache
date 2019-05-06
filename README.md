@@ -32,7 +32,44 @@ The library uses [cloakroom-smart-buffer-proxy](https://www.npmjs.com/package/cl
 The unit tests use Jest and the Yarn command below runs them.
 
 ```bash
-/tiny-toatie-cache ‹master*› % yarn test
+tiny-toatie-cache ‹master*› % yarn test                                                                                                    1 ↵
+yarn run v1.13.0
+$ jest .spec.js --coverage
+ PASS  __tests__/search/search.spec.js
+ PASS  __tests__/cache/lookup-handlers/cache-lookup-handler.spec.js
+ PASS  __tests__/cache/lookup-handlers/cache-short-circuit-check.spec.js
+ PASS  __tests__/cache/lookup-handlers/cold-lookup-handler.spec.js
+ PASS  __tests__/cache/lookup-dispatcher.spec.js
+ PASS  __tests__/cache-store/store.spec.js
+ PASS  __tests__/cache/cache.spec.js
+ PASS  __tests__/public-factory/index.spec.js
+-------------------------------|----------|----------|----------|----------|-------------------|
+File                           |  % Stmts | % Branch |  % Funcs |  % Lines | Uncovered Line #s |
+-------------------------------|----------|----------|----------|----------|-------------------|
+All files                      |      100 |      100 |      100 |      100 |                   |
+ cache                         |      100 |      100 |      100 |      100 |                   |
+  index.js                     |      100 |      100 |      100 |      100 |                   |
+  lookup-dispatcher.js         |      100 |      100 |      100 |      100 |                   |
+ cache-store                   |      100 |      100 |      100 |      100 |                   |
+  index.js                     |      100 |      100 |      100 |      100 |                   |
+ cache/lookup-handlers         |      100 |      100 |      100 |      100 |                   |
+  cache-lookup-handler.js      |      100 |      100 |      100 |      100 |                   |
+  cache-short-circuit-check.js |      100 |      100 |      100 |      100 |                   |
+  cold-lookup-handler.js       |      100 |      100 |      100 |      100 |                   |
+  handler-response-enum.js     |        0 |        0 |        0 |        0 |                   |
+  result-source-enum.js        |        0 |        0 |        0 |        0 |                   |
+ public-factory                |      100 |      100 |      100 |      100 |                   |
+  index.js                     |      100 |      100 |      100 |      100 |                   |
+ search                        |      100 |      100 |      100 |      100 |                   |
+  index.js                     |      100 |      100 |      100 |      100 |                   |
+-------------------------------|----------|----------|----------|----------|-------------------|
+
+Test Suites: 8 passed, 8 total
+Tests:       64 passed, 64 total
+Snapshots:   0 total
+Time:        3.455s
+Ran all test suites matching /.spec.js/i.
+✨  Done in 4.49s.
 ```
 
 ## Adding to your project
@@ -118,23 +155,23 @@ Cache hits: 0, Cache misses: 1000000
 Experiment configuration:
 { input_key_count: 2560,
   dictionary_size: 2560000,
-  words_per_key: 3,
+  words_per_key: 2,
   only_dictionary_search_queries: true,
   number_of_search_attempts: 1000000,
   cache_bypass: true }
-Experiment time taken: 10686.166241
+Experiment time taken: 9063.742370999998
 
 
 Test label: Cache enabled experiment
-Cache hits: 997440, Cache misses: 2560
+Cache hits: 0, Cache misses: 1000000
 Experiment configuration:
 { input_key_count: 2560,
   dictionary_size: 2560000,
-  words_per_key: 3,
+  words_per_key: 2,
   only_dictionary_search_queries: true,
   number_of_search_attempts: 1000000,
   cache_bypass: false }
-Experiment time taken: 1001.0715529999998
+Experiment time taken: 1330.6336329999995
 
 ```
 
@@ -148,22 +185,22 @@ Cache hits: 0, Cache misses: 1000000
 Experiment configuration:
 { input_key_count: 2560,
   dictionary_size: 2560000,
-  words_per_key: 3,
+  words_per_key: 2,
   only_dictionary_search_queries: false,
   number_of_search_attempts: 1000000,
   cache_bypass: true }
-Experiment time taken: 19688.572323999997
+Experiment time taken: 17834.606991
 
 
 Test label: Cache enabled experiment
-Cache hits: 0, Cache misses: 0
+Cache hits: 0, Cache misses: 3545
 Experiment configuration:
 { input_key_count: 2560,
   dictionary_size: 2560000,
-  words_per_key: 3,
+  words_per_key: 2,
   only_dictionary_search_queries: false,
   number_of_search_attempts: 1000000,
   cache_bypass: false }
-Experiment time taken: 20715.121002000004
+Experiment time taken: 17229.577994
 
 ```

@@ -1,5 +1,6 @@
 import handleCacheLookup from './lookup-handlers/cache-lookup-handler';
 import handleColdLookup from './lookup-handlers/cold-lookup-handler';
+import cacheShortCircuitCheck from './lookup-handlers/cache-short-circuit-check';
 import LookupDispatcher from './lookup-dispatcher';
 
 class Cache {
@@ -12,6 +13,7 @@ class Cache {
     this.events = {};
     this.lastTimeSnapshot = 0;
     this.lookupDispatcher = new LookupDispatcher();
+    this.lookupDispatcher.registerHandler(cacheShortCircuitCheck);
     this.lookupDispatcher.registerHandler(handleCacheLookup);
     this.lookupDispatcher.registerHandler(handleColdLookup);
     this.lookupDispatcher.on('complete', this.onCompleteCallback.bind(this));
@@ -20,9 +22,10 @@ class Cache {
   onCompleteCallback(handlerId) {
     switch (handlerId) {
       case 0:
-        this.callOn('hit', Date.now() - this.lastTimeSnapshot);
-        break;
+      this.callOn('hit', Date.now() - this.lastTimeSnapshot);
+      break;
       case 1:
+      case 2:
         this.callOn('miss', Date.now() - this.lastTimeSnapshot);
         break;
     }
